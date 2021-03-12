@@ -1,0 +1,476 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version="0.6" generator="Osmosis 0.45">
+  <bounds minlon="5.86442" minlat="47.26543" maxlon="15.05078" maxlat="55.14777" origin="0.45"/>
+  <node id="100" version="13" timestamp="2021-01-06T19:54:29Z" uid="0" user="" lat="52.8916184" lon="10.8340913">
+    <tag k="description" v="Weltkriegsdenkmal"/>
+    <tag k="historic" v="memorial"/>
+    <tag k="memorial" v="war_memorial"/>
+  </node>
+  <node id="359460" version="9" timestamp="2019-09-03T06:55:16Z" uid="0" user="" lat="50.9155914" lon="6.9412465">
+    <tag k="name" v="Papa-Pizza"/>
+    <tag k="amenity" v="fast_food"/>
+    <tag k="cuisine" v="pizza"/>
+    <tag k="website" v="http://papapizza24.de"/>
+    <tag k="addr:city" v="Köln"/>
+    <tag k="wheelchair" v="limited"/>
+    <tag k="addr:street" v="Höninger Weg"/>
+    <tag k="addr:postcode" v="50969"/>
+    <tag k="drive_through" v="no"/>
+    <tag k="outdoor_seating" v="no"/>
+    <tag k="addr:housenumber" v="107"/>
+  </node>
+  <node id="359832" version="6" timestamp="2016-01-12T09:21:59Z" uid="0" user="" lat="50.9051565" lon="6.963755">
+    <tag k="name" v="Campus"/>
+    <tag k="amenity" v="restaurant"/>
+    <tag k="wheelchair" v="yes"/>
+  </node>
+  <node id="661339" version="6" timestamp="2017-11-05T19:56:16Z" uid="0" user="" lat="48.1039393" lon="11.4882546">
+    <tag k="name" v="Café Hölzl"/>
+    <tag k="amenity" v="cafe"/>
+    <tag k="addr:city" v="München"/>
+    <tag k="addr:street" v="Lorettoplatz"/>
+    <tag k="addr:country" v="DE"/>
+    <tag k="addr:postcode" v="81377"/>
+    <tag k="opening_hours" v="Mo-Fr 10:00-17:30; Sa-Su 11:00-17:30"/>
+    <tag k="addr:housenumber" v="7"/>
+  </node>
+  <node id="3325823" version="11" timestamp="2019-11-24T16:34:46Z" uid="0" user="" lat="51.1130814" lon="13.6571918">
+    <tag k="name" v="Grundmühle"/>
+    <tag k="source" v="survey"/>
+    <tag k="amenity" v="restaurant"/>
+    <tag k="wikidata" v="Q1550585"/>
+    <tag k="opening_hours" v="Mo-Fr 17:00-23:00; Sa 11:30-24:00; Su 11:30-20:00"/>
+  </node>
+  <node id="9354695" version="5" timestamp="2019-06-19T16:29:54Z" uid="0" user="" lat="54.8911553" lon="8.3816736">
+    <tag k="tourism" v="viewpoint"/>
+  </node>
+  <node id="10774495" version="4" timestamp="2020-04-12T13:50:17Z" uid="0" user="" lat="53.4728646" lon="9.8794819">
+    <tag k="name" v="Neuwiedenthal"/>
+    <tag k="layer" v="-1"/>
+    <tag k="level" v="-1"/>
+    <tag k="railway" v="subway_entrance"/>
+    <tag k="entrance" v="yes"/>
+    <tag k="wheelchair" v="yes"/>
+    <tag k="entrance_marker:s-train" v="yes"/>
+  </node>
+  <node id="10777231" version="11" timestamp="2017-02-15T12:28:41Z" uid="0" user="" lat="53.4730774" lon="9.8754895">
+    <tag k="name" v="Neuwiedenthal"/>
+    <tag k="railway" v="subway_entrance"/>
+    <tag k="entrance" v="yes"/>
+    <tag k="wheelchair" v="yes"/>
+    <tag k="toilets:wheelchair" v="yes"/>
+    <tag k="entrance_marker:s-train" v="yes"/>
+  </node>
+  <node id="12260880" version="16" timestamp="2020-07-04T09:37:03Z" uid="0" user="" lat="51.0148364" lon="13.6455499">
+    <tag k="name" v="Shell"/>
+    <tag k="shop" v="yes"/>
+    <tag k="brand" v="Shell"/>
+    <tag k="phone" v="+49 351 6501204"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="website" v="https://find.shell.com/de/fuel/10027442-freital-wilsdruffer-str/de_DE"/>
+    <tag k="entrance" v="main"/>
+    <tag k="operator" v="Shell in Deutschland"/>
+    <tag k="addr:city" v="Freital"/>
+    <tag k="wheelchair" v="yes"/>
+    <tag k="addr:street" v="Wilsdruffer Straße"/>
+    <tag k="addr:suburb" v="Zauckerode"/>
+    <tag k="description" v="Shop, Waschanlage, Toilette, Geldautomat, Shell CLUBSMART , Maut Terminal, Kreditkarte"/>
+    <tag k="fuel:diesel" v="yes"/>
+    <tag k="addr:country" v="DE"/>
+    <tag k="addr:postcode" v="01705"/>
+    <tag k="opening_hours" v="Mo-Fr 05:00-22:00; PH,Sa-Su 06:00-22:00"/>
+    <tag k="fuel:octane_95" v="yes"/>
+    <tag k="contact:website" v="https://www.facebook.com/Shell-262346297791992/"/>
+    <tag k="fuel:octane_100" v="yes"/>
+    <tag k="addr:housenumber" v="54"/>
+  </node>
+  <node id="15520063" version="13" timestamp="2019-08-07T15:52:15Z" uid="0" user="" lat="48.9951676" lon="8.3896004">
+    <tag k="name" v="Aral"/>
+    <tag k="brand" v="Aral"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="fuel:cng" v="no"/>
+    <tag k="fuel:e10" v="yes"/>
+    <tag k="fuel:e85" v="no"/>
+    <tag k="fuel:lpg" v="no"/>
+    <tag k="addr:city" v="Karlsruhe"/>
+    <tag k="fuel:1_25" v="no"/>
+    <tag k="fuel:1_50" v="no"/>
+    <tag k="addr:street" v="Ebertstraße"/>
+    <tag k="fuel:diesel" v="yes"/>
+    <tag k="addr:country" v="DE"/>
+    <tag k="surveillance" v="outdoor"/>
+    <tag k="addr:postcode" v="76137"/>
+    <tag k="contact:phone" v="+49 721 817516"/>
+    <tag k="opening_hours" v="Mo-Fr 06:00-00:00; Sa, Su 07:00-00:00"/>
+    <tag k="brand:wikidata" v="Q565734"/>
+    <tag k="fuel:biodiesel" v="no"/>
+    <tag k="fuel:octane_80" v="no"/>
+    <tag k="fuel:octane_91" v="no"/>
+    <tag k="fuel:octane_92" v="no"/>
+    <tag k="fuel:octane_95" v="yes"/>
+    <tag k="fuel:octane_98" v="no"/>
+    <tag k="brand:wikipedia" v="en:Aral AG"/>
+    <tag k="fuel:GTL_diesel" v="yes"/>
+    <tag k="fuel:HGV_diesel" v="no"/>
+    <tag k="fuel:octane_100" v="yes"/>
+    <tag k="addr:housenumber" v="32"/>
+    <tag k="surveillance:type" v="camera"/>
+  </node>
+  <node id="15839230" version="8" timestamp="2019-12-25T14:56:47Z" uid="0" user="" lat="53.4481621" lon="9.9806294">
+    <tag k="access" v="yes"/>
+    <tag k="leisure" v="playground"/>
+  </node>
+  <node id="15870071" version="14" timestamp="2017-12-21T16:55:24Z" uid="0" user="" lat="50.81285" lon="12.8108822">
+    <tag k="name" v="Esso"/>
+    <tag k="brand" v="Esso"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="fuel:lpg" v="yes"/>
+    <tag k="operator" v="Esso Gerd Weissflog"/>
+    <tag k="wheelchair" v="yes"/>
+    <tag k="addr:street" v="An der Wiesenmühle"/>
+    <tag k="addr:postcode" v="09224"/>
+    <tag k="opening_hours" v="Mo-Fr 05:00-21:00; Sa-Su 06:00-21:00"/>
+    <tag k="addr:housenumber" v="2"/>
+  </node>
+  <node id="16051430" version="10" timestamp="2019-12-14T14:33:06Z" uid="0" user="" lat="49.5506867" lon="8.6688678">
+    <tag k="name" v="Stadtbibliothek Weinheim"/>
+    <tag k="amenity" v="library"/>
+    <tag k="ref:isil" v="DE-441"/>
+    <tag k="wikidata" v="Q28681551"/>
+    <tag k="wheelchair" v="limited"/>
+    <tag k="opening_hours" v="Mo-We,Fr 10:00-18:00, Th 10:00-19:00, Sa 10:00-14:00"/>
+    <tag k="toilets:wheelchair" v="no"/>
+  </node>
+  <node id="16084570" version="18" timestamp="2021-01-14T09:07:42Z" uid="0" user="" lat="50.1312059" lon="8.6832855">
+    <tag k="addr:city" v="Frankfurt am Main"/>
+    <tag k="addr:housenumber" v="1"/>
+    <tag k="addr:postcode" v="60322"/>
+    <tag k="addr:street" v="Adickesallee"/>
+    <tag k="amenity" v="library"/>
+    <tag k="contact:email" v="info-f@dnb.de"/>
+    <tag k="contact:fax" v="+49 69 15251010"/>
+    <tag k="contact:phone" v="+49 69 1525-0"/>
+    <tag k="name" v="Deutsche Nationalbibliothek"/>
+    <tag k="opening_hours" v="Mo-Fr 09:00-22:00; Sa 10:00-18:00; Su off; PH off; easter -1 day off; Oct 31 off; Dec 24-31 off; Jan 01-03 off"/>
+    <tag k="ref:isil" v="DE-101b"/>
+    <tag k="short_name" v="DNB"/>
+    <tag k="website" v="http://www.dnb.de/"/>
+    <tag k="wheelchair" v="yes"/>
+    <tag k="wheelchair:description" v="Es gibt zwar Aufzüge und rollstuhlgerechte Toiletten, aber auf all die Ziertreppchen hätte man auch einfach verzichten können."/>
+    <tag k="wikidata" v="Q27302"/>
+    <tag k="wikipedia" v="de:Deutsche Nationalbibliothek"/>
+  </node>
+  <node id="16257501" version="7" timestamp="2020-05-31T20:10:11Z" uid="0" user="" lat="49.549639" lon="8.6559093">
+    <tag k="name" v="Subway"/>
+    <tag k="brand" v="Subway"/>
+    <tag k="amenity" v="fast_food"/>
+    <tag k="cuisine" v="sandwich"/>
+    <tag k="takeaway" v="yes"/>
+    <tag k="wheelchair" v="yes"/>
+    <tag k="brand:wikidata" v="Q244457"/>
+    <tag k="brand:wikipedia" v="en:Subway (restaurant)"/>
+  </node>
+  <node id="16257502" version="7" timestamp="2019-05-16T07:36:14Z" uid="0" user="" lat="49.5499388" lon="8.6563696">
+    <tag k="name" v="Stadtwerke Weinheim"/>
+    <tag k="note" v="natural gasoline"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="opening_hours" v="Mo-We 08:00-16:00; Th 08:00-17:00; Fr 08:00-14:00"/>
+  </node>
+  <node id="16257516" version="8" timestamp="2019-12-22T19:37:49Z" uid="0" user="" lat="49.5486899" lon="8.6643041">
+    <tag k="name" v="McDonald&apos;s"/>
+    <tag k="brand" v="McDonald&apos;s"/>
+    <tag k="amenity" v="fast_food"/>
+    <tag k="cuisine" v="burger"/>
+    <tag k="smoking" v="no"/>
+    <tag k="website" v="http://www.mcdonalds.de/"/>
+    <tag k="takeaway" v="yes"/>
+    <tag k="addr:city" v="Weinheim"/>
+    <tag k="wheelchair" v="limited"/>
+    <tag k="addr:street" v="Bergstraße"/>
+    <tag k="addr:country" v="DE"/>
+    <tag k="addr:postcode" v="69469"/>
+    <tag k="brand:wikidata" v="Q38076"/>
+    <tag k="brand:wikipedia" v="en:McDonald&apos;s"/>
+    <tag k="addr:housenumber" v="31"/>
+  </node>
+  <node id="16257541" version="7" timestamp="2018-11-24T13:49:34Z" uid="0" user="" lat="49.5537191" lon="8.669786">
+    <tag k="name" v="Woinemer Hausbrauerei"/>
+    <tag k="amenity" v="restaurant"/>
+    <tag k="website" v="http://www.woinemer-brauerei.de"/>
+    <tag k="wheelchair" v="yes"/>
+    <tag k="microbrewery" v="yes"/>
+    <tag k="toilets:wheelchair" v="no"/>
+  </node>
+  <node id="16351361" version="6" timestamp="2016-01-07T10:37:52Z" uid="0" user="" lat="49.5517546" lon="8.6756617">
+    <tag k="name" v="Galileo"/>
+    <tag k="phone" v="+49 6201 68883"/>
+    <tag k="amenity" v="restaurant"/>
+    <tag k="cuisine" v="pizza"/>
+    <tag k="website" v="http://www.pizzeria-galileo.de/"/>
+    <tag k="operator" v="Alessandro Galasso"/>
+    <tag k="wheelchair" v="yes"/>
+    <tag k="addr:street" v="Grundelbachstraße"/>
+    <tag k="opening_hours" v="Mo-Su 11:00-14:00,17:00-23:00; We off"/>
+    <tag k="addr:housenumber" v="108"/>
+  </node>
+  <node id="16351362" version="7" timestamp="2018-11-18T10:34:26Z" uid="0" user="" lat="49.5507625" lon="8.6748833">
+    <tag k="name" v="La Bodega Española"/>
+    <tag k="amenity" v="restaurant"/>
+    <tag k="cuisine" v="spanish"/>
+    <tag k="addr:city" v="Weinheim"/>
+    <tag k="wheelchair" v="no"/>
+    <tag k="addr:street" v="Lindenstraße"/>
+    <tag k="addr:postcode" v="69469"/>
+    <tag k="addr:housenumber" v="21"/>
+  </node>
+  <node id="16351491" version="4" timestamp="2016-01-03T21:10:28Z" uid="0" user="" lat="49.552035" lon="8.6746154">
+    <tag k="name" v="Rodensteiner Brunnen"/>
+    <tag k="amenity" v="fountain"/>
+  </node>
+  <node id="16463584" version="7" timestamp="2015-02-05T11:41:22Z" uid="0" user="" lat="49.5492702" lon="8.673156">
+    <tag k="name" v="Pizzeria Italia"/>
+    <tag k="amenity" v="restaurant"/>
+    <tag k="cuisine" v="italian"/>
+    <tag k="addr:city" v="Weinheim"/>
+    <tag k="addr:street" v="Grundelbachstraße"/>
+    <tag k="addr:country" v="DE"/>
+    <tag k="addr:postcode" v="69469"/>
+    <tag k="addr:housenumber" v="39"/>
+  </node>
+  <node id="16477758" version="3" timestamp="2012-11-11T17:43:27Z" uid="0" user="" lat="48.9564479" lon="8.1987013">
+    <tag k="note" v="Schutzhütte"/>
+    <tag k="amenity" v="shelter"/>
+  </node>
+  <node id="16541597" version="9" timestamp="2021-01-19T09:33:48Z" uid="0" user="" lat="52.5464403" lon="13.3454394">
+    <tag k="amenity" v="fuel"/>
+    <tag k="brand" v="Aral"/>
+    <tag k="brand:wikidata" v="Q565734"/>
+    <tag k="brand:wikipedia" v="en:Aral AG"/>
+    <tag k="man_made" v="surveillance"/>
+    <tag k="name" v="Aral"/>
+    <tag k="surveillance" v="outdoor"/>
+    <tag k="wheelchair" v="no"/>
+  </node>
+  <node id="16541937" version="12" timestamp="2019-08-10T13:17:41Z" uid="0" user="" lat="52.160478" lon="12.7820201">
+    <tag k="name" v="McDonald&apos;s"/>
+    <tag k="brand" v="McDonald&apos;s"/>
+    <tag k="phone" v="+49 33844 52034"/>
+    <tag k="amenity" v="fast_food"/>
+    <tag k="cuisine" v="burger"/>
+    <tag k="takeaway" v="yes"/>
+    <tag k="addr:city" v="Linthe"/>
+    <tag k="wheelchair" v="yes"/>
+    <tag k="addr:street" v="Westfalenstraße"/>
+    <tag k="survey:date" v="2015-10-11"/>
+    <tag k="addr:country" v="DE"/>
+    <tag k="addr:postcode" v="14822"/>
+    <tag k="opening_hours" v="06:00-01:00"/>
+    <tag k="brand:wikidata" v="Q38076"/>
+    <tag k="brand:wikipedia" v="en:McDonald&apos;s"/>
+    <tag k="addr:housenumber" v="1"/>
+  </node>
+  <node id="16547281" version="3" timestamp="2009-04-04T18:17:03Z" uid="0" user="" lat="49.5441059" lon="8.6714737">
+    <tag k="name" v="Katzenlauf"/>
+    <tag k="leisure" v="playground"/>
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="16548176" version="8" timestamp="2020-01-27T17:15:52Z" uid="0" user="" lat="49.5474931" lon="8.6744949">
+    <tag k="name" v="Jet"/>
+    <tag k="brand" v="Jet"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="addr:city" v="Weinheim"/>
+    <tag k="addr:street" v="Grundelbachstraße"/>
+    <tag k="addr:postcode" v="69469"/>
+    <tag k="brand:wikidata" v="Q568940"/>
+    <tag k="brand:wikipedia" v="en:Jet (brand)"/>
+    <tag k="addr:housenumber" v="16-18"/>
+  </node>
+  <node id="16571702" version="6" timestamp="2015-06-28T23:06:00Z" uid="0" user="" lat="49.0258714" lon="8.3036955">
+    <tag k="name" v="Tulla Denkmal"/>
+    <tag k="historic" v="memorial"/>
+    <tag k="memorial" v="stone"/>
+    <tag k="inscription" v="Dem großherzoglich badischen Ingenieur Oberst I. G. TULLA dem verdienstvollen Gründer, der zum großen Nutzen aller Uferbewohner unter der sengensreichen Regierung des Großherzogs Carl Friedrich unternommenen Rhein Rectification zum ehrenden Andenken..."/>
+    <tag k="seamark:type" v="landmark"/>
+    <tag k="seamark:landmark:name" v="Tulla Denkmal"/>
+    <tag k="seamark:landmark:category" v="statue"/>
+    <tag k="seamark:landmark:conspicuity" v="conspicuous"/>
+  </node>
+  <node id="16655326" version="7" timestamp="2012-10-29T19:10:32Z" uid="0" user="" lat="49.6300094" lon="8.7601858">
+    <tag k="fax" v="+49-6253-86405"/>
+    <tag k="brand" v="Aral"/>
+    <tag k="phone" v="+49-6253-6484"/>
+    <tag k="tenant" v="Dirk Bak"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="building" v="yes"/>
+    <tag k="fuel:e10" v="yes"/>
+    <tag k="addr:city" v="Rimbach"/>
+    <tag k="addr:street" v="Staatsstraße"/>
+    <tag k="fuel:diesel" v="yes"/>
+    <tag k="payment:dkv" v="yes"/>
+    <tag k="payment:uta" v="yes"/>
+    <tag k="addr:country" v="DE"/>
+    <tag k="payment:cash" v="yes"/>
+    <tag k="payment:visa" v="yes"/>
+    <tag k="addr:postcode" v="64668"/>
+    <tag k="opening_hours" v="Mo-Sa 06:00-22:00; Su 07:00-22:00"/>
+    <tag k="fuel:octane_95" v="yes"/>
+    <tag k="fuel:GTL_diesel" v="yes"/>
+    <tag k="fuel:octane_102" v="yes"/>
+    <tag k="addr:housenumber" v="101"/>
+    <tag k="payment:mastercard" v="yes"/>
+    <tag k="payment:diners_club" v="yes"/>
+    <tag k="payment:american_express" v="yes"/>
+  </node>
+  <node id="16712921" version="4" timestamp="2020-02-07T15:34:16Z" uid="0" user="" lat="49.5553539" lon="8.6779123">
+    <tag k="amenity" v="bench"/>
+  </node>
+  <node id="16712922" version="4" timestamp="2020-02-07T15:34:16Z" uid="0" user="" lat="49.5572233" lon="8.6773213">
+    <tag k="amenity" v="bench"/>
+    <tag k="backrest" v="yes"/>
+    <tag k="material" v="wood"/>
+  </node>
+  <node id="16714225" version="3" timestamp="2008-09-20T22:52:12Z" uid="0" user="" lat="49.5563525" lon="8.6786157">
+    <tag k="amenity" v="bench"/>
+  </node>
+  <node id="16714226" version="2" timestamp="2015-02-16T17:12:22Z" uid="0" user="" lat="49.5600516" lon="8.6777749">
+    <tag k="tourism" v="viewpoint"/>
+  </node>
+  <node id="16714228" version="2" timestamp="2012-08-30T11:48:41Z" uid="0" user="" lat="49.5601097" lon="8.6778195">
+    <tag k="amenity" v="shelter"/>
+  </node>
+  <node id="16931245" version="2" timestamp="2007-11-01T23:32:40Z" uid="0" user="" lat="49.5551739" lon="8.6757244">
+    <tag k="leisure" v="playground"/>
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="17025149" version="2" timestamp="2008-09-20T22:52:13Z" uid="0" user="" lat="49.5444114" lon="8.6715051">
+    <tag k="name" v="Voliere"/>
+    <tag k="tourism" v="attraction"/>
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="17025150" version="1" timestamp="2006-09-29T14:52:39Z" uid="0" user="" lat="49.5445307" lon="8.6719818">
+    <tag k="name" v="Heilpflanzengarten"/>
+    <tag k="leisure" v="park"/>
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="17848301" version="7" timestamp="2018-09-13T21:16:20Z" uid="0" user="" lat="54.1063105" lon="11.6052041">
+    <tag k="tourism" v="viewpoint"/>
+    <tag k="wheelchair" v="yes"/>
+  </node>
+  <node id="17983325" version="11" timestamp="2020-01-10T19:45:44Z" uid="0" user="" lat="48.1085713" lon="11.7224288">
+    <tag k="name" v="Aral"/>
+    <tag k="brand" v="Aral"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="operator" v="Aral"/>
+    <tag k="addr:city" v="Haar"/>
+    <tag k="addr:street" v="Münchener Straße"/>
+    <tag k="fuel:diesel" v="yes"/>
+    <tag k="addr:country" v="DE"/>
+    <tag k="addr:postcode" v="85540"/>
+    <tag k="opening_hours" v="24/7"/>
+    <tag k="brand:wikidata" v="Q565734"/>
+    <tag k="fuel:octane_95" v="yes"/>
+    <tag k="brand:wikipedia" v="en:Aral AG"/>
+    <tag k="addr:housenumber" v="16"/>
+  </node>
+  <node id="17984040" version="14" timestamp="2018-12-20T10:01:00Z" uid="0" user="" lat="48.0966538" lon="11.7292851">
+    <tag k="name" v="Shell"/>
+    <tag k="brand" v="Shell"/>
+    <tag k="source" v="survey"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="addr:city" v="Grasbrunn"/>
+    <tag k="wheelchair" v="yes"/>
+    <tag k="addr:hamlet" v="Keferloh"/>
+    <tag k="addr:street" v="Im Keferloh"/>
+    <tag k="addr:country" v="DE"/>
+    <tag k="addr:postcode" v="85630"/>
+    <tag k="opening_hours" v="24/7"/>
+    <tag k="addr:housenumber" v="6"/>
+  </node>
+  <node id="18042871" version="5" timestamp="2018-11-19T12:22:28Z" uid="0" user="" lat="48.1219347" lon="11.6640104">
+    <tag k="name" v="Allguth"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="fuel:e10" v="yes"/>
+    <tag k="fuel:diesel" v="yes"/>
+    <tag k="fuel:octane_95" v="yes"/>
+    <tag k="fuel:octane_98" v="yes"/>
+  </node>
+  <node id="18087087" version="12" timestamp="2020-12-12T08:13:52Z" uid="0" user="" lat="48.1622277" lon="11.7567111">
+    <tag k="amenity" v="restaurant"/>
+    <tag k="cuisine" v="vietnamese"/>
+    <tag k="name" v="Huong Viet"/>
+    <tag k="opening_hours" v="Sa 16:30-22:30; Mo-Fr 11:30-15:30, 16:30-22:30; Su 11:30-15:30, 16:30-22:30"/>
+    <tag k="toilets:wheelchair" v="no"/>
+    <tag k="website" v="http://www.huong-viet-heimstetten.de/"/>
+    <tag k="wheelchair" v="yes"/>
+  </node>
+  <node id="18172546" version="11" timestamp="2019-06-09T13:24:32Z" uid="0" user="" lat="48.1982548" lon="11.3014107">
+    <tag k="name" v="Esso"/>
+    <tag k="brand" v="Esso"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="addr:city" v="Olching"/>
+    <tag k="wheelchair" v="yes"/>
+    <tag k="addr:street" v="Schloßstraße"/>
+    <tag k="fuel:diesel" v="yes"/>
+    <tag k="addr:country" v="DE"/>
+    <tag k="addr:postcode" v="82140"/>
+    <tag k="brand:wikidata" v="Q867662"/>
+    <tag k="fuel:octane_95" v="yes"/>
+    <tag k="fuel:octane_98" v="yes"/>
+    <tag k="brand:wikipedia" v="en:Esso"/>
+    <tag k="addr:housenumber" v="161a"/>
+  </node>
+  <node id="18311071" version="7" timestamp="2018-03-27T09:08:36Z" uid="0" user="" lat="48.729309" lon="8.1559772">
+    <tag k="name" v="Aral"/>
+    <tag k="brand" v="Aral"/>
+    <tag k="phone" v="+49 7223 96420"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="fuel:lpg" v="yes"/>
+    <tag k="operator" v="Karcher OHG"/>
+    <tag k="addr:city" v="Baden-Baden"/>
+    <tag k="wheelchair" v="limited"/>
+    <tag k="addr:street" v="Poststraße"/>
+    <tag k="fuel:diesel" v="yes"/>
+    <tag k="addr:postcode" v="76534"/>
+    <tag k="opening_hours" v="Mo-Sa 06:00-22:00; Su 07:00-22:00"/>
+    <tag k="fuel:octane_91" v="yes"/>
+    <tag k="fuel:octane_95" v="yes"/>
+    <tag k="fuel:octane_98" v="yes"/>
+    <tag k="addr:housenumber" v="40"/>
+  </node>
+  <node id="19096125" version="8" timestamp="2019-04-26T08:06:42Z" uid="0" user="" lat="48.6803935" lon="8.3591956">
+    <tag k="name" v="Avia"/>
+    <tag k="brand" v="Avia"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="fuel:e10" v="yes"/>
+    <tag k="operator" v="Avia"/>
+    <tag k="fuel:diesel" v="yes"/>
+    <tag k="fuel:octane_95" v="yes"/>
+    <tag k="fuel:octane_98" v="yes"/>
+  </node>
+  <node id="19832133" version="9" timestamp="2021-01-05T15:40:22Z" uid="0" user="" lat="48.9870633" lon="8.3331082">
+    <tag k="addr:city" v="Rheinstetten"/>
+    <tag k="addr:country" v="DE"/>
+    <tag k="addr:postcode" v="76287"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="brand" v="OMV"/>
+    <tag k="check_date:opening_hours" v="2021-01-05"/>
+    <tag k="fuel:diesel" v="yes"/>
+    <tag k="fuel:lpg" v="yes"/>
+    <tag k="fuel:MaxxMotion_Diesel" v="yes"/>
+    <tag k="fuel:super" v="yes"/>
+    <tag k="name" v="OMV"/>
+    <tag k="opening_hours" v="Mo-Sa 06:00-22:00; Su 08:00-22:00; PH 08:00-22:00"/>
+    <tag k="wheelchair" v="yes"/>
+  </node>
+  <node id="20090856" version="11" timestamp="2019-12-06T19:02:21Z" uid="0" user="" lat="47.8772309" lon="11.7010946">
+    <tag k="name" v="Zum Oberbräu"/>
+    <tag k="note" v="Zum 01.12.2019 vom Wirt des Oberland neu eröffnet"/>
+    <tag k="amenity" v="restaurant"/>
+    <tag k="cuisine" v="bavarian"/>
+    <tag k="smoking" v="outside"/>
+    <tag k="addr:city" v="Holzkirchen"/>
+    <tag k="addr:street" v="Marktplatz"/>
+    <tag k="addr:postcode" v="83607"/>
+    <tag k="addr:housenumber" v="18"/>
+  </node>
+  </osm>

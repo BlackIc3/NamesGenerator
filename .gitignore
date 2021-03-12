@@ -1,0 +1,6 @@
+node_modules/*
+.vscode/*
+build/*
+
+data/germany_pois.osm.xml
+attributes.csv
