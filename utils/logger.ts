@@ -1,4 +1,6 @@
 import { IAnalysisResult } from "./analysing-util";
+import * as fs from 'fs';
+
 
 export class Logger {
     private static longestMsg = 0;
@@ -51,8 +53,42 @@ export class Logger {
         this.write(message.padEnd(this.longestMsg - 1, ' ') + '\n');
     }
 
-    public static outputAnalysisResult(input:Map<string, IAnalysisResult>, filename?:string) {
-        
+    public static outputAnalysisResult(result:IAnalysisResult, filename?:string) {
+        const output = [];
+        const cleanOutput = [];
+
+        result.children.forEach((child, key) => {
+            const header = '[i] ' + key + ' [' + Logger.beautfiyNumber(child.total) + ']' +'\n';
+            const result = this.stringifyAnalysisResult(child, key);
+            //if (child.pois.length) entries += '\n  - Remaining: ' + this.beautfiyNumber(child.pois.length);
+            output.push(header + result);
+            cleanOutput.push(...result.split('\n').map((line) => line.replace(/'  - '/gm, '')));
+        });
+        console.log(output.join('\n\n'));
+        if (!!filename) {
+            if (!fs.existsSync('out/')) fs.mkdirSync('out');
+            fs.writeFileSync('out/' + filename, output.join('\n\n'));
+        }
+        return cleanOutput;
+    }
+
+    private static stringifyAnalysisResult(result:IAnalysisResult, key:string, isKey = true, output = '  - '): string {
+        if (!isKey) {
+            output += '.' + key;
+            if (result.children.size) output += ' && ';
+        } else {
+            output += key;
+        }
+
+        if (!result.children.size) {
+            output += ': ' + this.beautfiyNumber(result.pois.length);
+            return output;
+        }
+
+        const lines = [];
+        if (result.pois.length) lines.push(`${output.replace(/ && $/, '')}: ${this.beautfiyNumber(result.pois.length)}`);
+        result.children.forEach((child, currentKey) => lines.push(this.stringifyAnalysisResult(child, currentKey, !isKey, output)));
+        return lines.join('\n');
     }
 
     private static write(text:string) {

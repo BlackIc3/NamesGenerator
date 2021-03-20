@@ -1,6 +1,7 @@
 node_modules/*
 .vscode/*
 build/*
+out/*
 
 data/germany_pois.osm.xml
 attributes.csv
