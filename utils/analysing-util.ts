@@ -20,9 +20,13 @@ export class Analyst {
         this.totalAmout = handler.size;
 
         Logger.printProgress('Analyzing data', this.completed, this.totalAmout);
+        const start = new Date().getTime();
+
         const emptyResult = { total: handler.size, pois: [], children: new Map<string, IAnalysisResult>() };
         const result =  this.analyseRecursive(handler, cutoff, emptyResult);
-        Logger.printDone('[+] Analyzed ' + Logger.beautfiyNumber(handler.size) + ' POIs in 0s!');
+        
+        const time = new Date().getTime() - start;
+        Logger.printDone('[+] Analyzed ' + Logger.beautfiyNumber(handler.size) + ' POIs in ' + Math.round(time / 1000) + 's!');
         
         return result;
     }
@@ -120,10 +124,13 @@ export class Analyst {
             const pois = [...handler.pois];
             pois.forEach((poi) => progress.pois.push(poi));
 
-            this.completed = this.completed + pois.length;
+            this.completed = this.completed + pois.length * 0.5;
             Logger.printProgress('Analyzing data', this.completed, this.totalAmout);
             return progress;
         }
+
+        this.completed = this.completed + progress.pois.length * 0.5;
+        Logger.printProgress('Analyzing data', this.completed, this.totalAmout);
 
         // get the distribution of the current split, dividing either by "most common key" or "most common value" when a key is given
         const distribution = this.getDistribution(handler, !byKey ? prevKey : "");
