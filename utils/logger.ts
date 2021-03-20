@@ -55,21 +55,24 @@ export class Logger {
 
     public static outputAnalysisResult(result:IAnalysisResult, filename?:string) {
         const output = [];
-        const cleanOutput = [];
+        //const cleanOutput = [];
 
         result.children.forEach((child, key) => {
             const header = '[i] ' + key + ' [' + Logger.beautfiyNumber(child.total) + ']' +'\n';
             const result = this.stringifyAnalysisResult(child, key);
             //if (child.pois.length) entries += '\n  - Remaining: ' + this.beautfiyNumber(child.pois.length);
             output.push(header + result);
-            cleanOutput.push(...result.split('\n').map((line) => line.replace(/'  - '/gm, '')));
+            //cleanOutput.push(...result.split('\n').map((line) => line.replace(/'  - '/gm, '')));
         });
+
+        if (result.pois.length) output.push('[i] Not groupable: ' + this.beautfiyNumber(result.pois.length));
+
         console.log(output.join('\n\n'));
         if (!!filename) {
             if (!fs.existsSync('out/')) fs.mkdirSync('out');
             fs.writeFileSync('out/' + filename, output.join('\n\n'));
         }
-        return cleanOutput;
+        //return cleanOutput;
     }
 
     private static stringifyAnalysisResult(result:IAnalysisResult, key:string, isKey = true, output = '  - '): string {
