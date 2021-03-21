@@ -15,7 +15,7 @@ export class Analyst {
     private static completed = 0;
     private static totalAmout = 0;
 
-    public static analyse(handler: PoiHandler, cutoff): IAnalysisResult {
+    public static analyse(handler: PoiHandler, cutoff: number): IAnalysisResult {
         this.completed = 0;
         this.totalAmout = handler.size;
 

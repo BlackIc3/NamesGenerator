@@ -3,19 +3,20 @@ import * as fs from 'fs';
 import * as ReadLine from 'readline';
 import { PoiHandler } from '../models/PoiHandler.js';
 import { Logger } from './logger.js';
+import { CONFIG } from '../config.js';
 
 export class Parser {
-    private static defaultName = 'attributes.csv';
+    private static defaultName = CONFIG.outFolder + '/' + CONFIG.poiData;
 
     static parse(filename?: string, size?:number): Promise<PoiHandler> {
-        if (!filename || fs.existsSync(this.defaultName)) return this.parseCsv(this.defaultName);
+        if (fs.existsSync(this.defaultName)) return this.parseCsv(this.defaultName);
         if (!fs.existsSync(filename)) throw new Error(`No file '${filename}' found!`);
         if (filename.endsWith('.xml')) return this.parseXml(filename, size);
         if (filename.endsWith('.csv')) return this.parseCsv(filename);
         throw new Error('Please specify either a .csv or .xml file!');
     }
 
-    private static parseXml(filename, size?:number): Promise<PoiHandler> {
+    private static parseXml(filename:string, size?:number): Promise<PoiHandler> {
         return new Promise((resolve, reject) => {
             const xml = new XmlStream(fs.createReadStream(filename), 'utf-8');
             const handler = new PoiHandler();
@@ -44,7 +45,7 @@ export class Parser {
         });
     }
 
-    private static parseCsv(filename): Promise<PoiHandler> {
+    private static parseCsv(filename:string): Promise<PoiHandler> {
         return new Promise((resolve, reject) => {
             Logger.printProgress(`Parsing '${filename}'`);
 
