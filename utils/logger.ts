@@ -1,5 +1,7 @@
 import { IAnalysisResult } from "./analysing-util";
 import * as fs from 'fs';
+import { IEntry } from "./combinations-handler";
+import { CONFIG } from "../config";
 
 
 export class Logger {
@@ -53,6 +55,38 @@ export class Logger {
         this.write(message.padEnd(this.longestMsg - 1, ' ') + '\n');
     }
 
+    public static outputCombinationsFile(combinations:IEntry[], destination:string, namesListLength = 1) {
+        if (namesListLength === 0) namesListLength = 1;
+        
+        const sortedList = [...combinations];
+        sortedList.sort((a, b) => b.needed - a.needed);
+        
+        const header = 'import { IEntry } from "../utils/combinations-handler";\n\nexport const combinations: IEntry[] = [';
+        const lines = [header];
+
+        sortedList.forEach((entry) => {
+            const approxSqrt = Math.ceil(Math.sqrt(entry.needed / namesListLength));
+            lines.push('\t{');
+            lines.push(`\t\t// ${approxSqrt} * ${approxSqrt}`);
+            lines.push(Object.entries(entry).map(([key, value]) => '\t\t' + key + ': ' + this.getCorrectString(value)).join(',\n'));
+            lines.push('\t},');
+        });
+
+        lines.push('];');
+        fs.writeFileSync(destination, lines.join('\n'));
+    }
+
+    private static getCorrectString(input: any): string {
+        switch (typeof input) {
+            case 'string':
+                return "'" + input + "'";
+            case 'number':
+                return input.toString();
+            case 'object':
+                return '[]';
+        }
+    }
+
     public static outputAnalysisResult(result:IAnalysisResult, filename?:string) {
         const output = [];
         //const cleanOutput = [];
@@ -69,8 +103,8 @@ export class Logger {
 
         console.log(output.join('\n\n'));
         if (!!filename) {
-            if (!fs.existsSync('out/')) fs.mkdirSync('out');
-            fs.writeFileSync('out/' + filename, output.join('\n\n'));
+            if (!fs.existsSync(CONFIG.outFolder + '/')) fs.mkdirSync(CONFIG.outFolder);
+            fs.writeFileSync(CONFIG.outFolder + '/' + filename, output.join('\n\n'));
         }
         //return cleanOutput;
     }

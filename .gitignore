@@ -2,6 +2,7 @@ node_modules/*
 .vscode/*
 build/*
 out/*
+!out/combinations.ts
 
 data/germany_pois.osm.xml
 attributes.csv
