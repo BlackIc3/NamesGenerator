@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { exit } from "process";
+import { exit, argv } from "process";
 import { CONFIG } from "./config.js";
 import { IAnalysisResult } from './models/analysisResultModel.js';
 import { Analyst } from "./utils/analysing-util.js";
@@ -21,31 +21,55 @@ async function analyse(silent = true) {
 }
 
 /**
- * If no combinations-file is given, it generates one and exits, otherwise parses the provided combinations, 
- * validates if enough names are provided and if so, generates the names
+ * Parses the provided combinations, validates if enough names are provided and if so, generates the names
  * @param result the result to work with
  */
-async function validateAndGenerate(result:IAnalysisResult) {
+async function generateNames(result:IAnalysisResult) {
+    const combinations = await CombinationsHandler.getCombinations();
+    const nameGenerator = new NamesGenerator(result, combinations);
+    nameGenerator.generateNames();
+}
+
+/**
+ * Generates all needed key-value-pairs for a given analysis result. Writes the output to a file and exits if the file does not exist already
+ * @param result the result analysis result to work with
+ */
+function generateCombinationsList(result:IAnalysisResult) {
     if (!fs.existsSync(CONFIG.outFolder + '/' + CONFIG.combinationsFilename)) {
         CombinationsHandler.generateCombinationsList(result);
         console.log('[+] Exiting now because a fresh list of combinations is most likely not sufficient...');
         exit(0);
     }
+}
+
+/**
+ * Validates if the current combinations list is sufficient to generate unique names, exiting the program if that is not the case 
+ */
+async function validateCombinationsList() {
     if(!await CombinationsHandler.validateCombinationsList()) {
         if (!CONFIG.forceNames) {
             console.log('[!] Insufficient words found, exiting now...');
             exit(0);
         }
     }
-
-    const combinations = await CombinationsHandler.getCombinations();
-    const nameGenerator = new NamesGenerator(result, combinations);
-    nameGenerator.generateNames();
 }
 
 async function main() {
-    const result = await analyse(false);
-    await validateAndGenerate(result);
+    const result = await analyse();
+    generateCombinationsList(result);
+    await validateCombinationsList();
+    await generateNames(result);
 }
 
-main();
+if (argv[2] === 'validate') {
+    CombinationsHandler.validateCombinationsList().then((isValid) => {
+        if (isValid) {
+            console.log('[+] Combination list is valid!');
+        } else {
+            console.log('[!] Combination list is invalid!');
+        }
+
+    })
+} else {
+    main();
+}

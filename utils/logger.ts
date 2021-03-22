@@ -113,6 +113,11 @@ export class Logger {
         fs.writeFileSync(destination, lines.join('\n'));
     }
 
+    /**
+     * Turns the different types into string representations (needed for outputCombinationsFile)
+     * @param input the input to stringify (a string, a number or an object)
+     * @returns a nice string representation of the input
+     */
     private static getCorrectString(input: any): string {
         switch (typeof input) {
             case 'string':

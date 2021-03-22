@@ -77,6 +77,9 @@ export class CombinationsHandler {
         return !missing.length;
     }
 
+    /**
+     * Initializes the internal list of names, parsing a list of default names if possible
+     */
     private static initNamesList() {
         if (fs.existsSync(CONFIG.namesList)) {
             this.namesList = fs.readFileSync(CONFIG.namesList, {encoding: 'utf-8'}).split('\n');
@@ -85,6 +88,9 @@ export class CombinationsHandler {
         }
     }
 
+    /**
+     * Initializes the internal combinations list, exiting if no file can be found
+     */
     private static async initCombinations() {
         if (fs.existsSync(this.outputFilename)) {
             this._combinations = (await import(this.moduleFilename)).combinations;
