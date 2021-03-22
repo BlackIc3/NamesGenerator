@@ -97,7 +97,7 @@ export class Logger {
         const sortedList = [...combinations];
         sortedList.sort((a, b) => b.needed - a.needed);
         
-        const header = 'import { ICombination } from "../utils/combinations-handler";\n\nexport const combinations: ICombination[] = [';
+        const header = 'import { ICombination } from "../models/combinationModel";\n\nexport const combinations: ICombination[] = [';
         const lines = [header];
 
         sortedList.forEach((entry) => {

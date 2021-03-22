@@ -1,4 +1,4 @@
-import { ICombination } from "../utils/combinations-handler";
+import { ICombination } from "../models/combinationModel";
 
 export const combinations: ICombination[] = [
 	{

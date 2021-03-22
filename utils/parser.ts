@@ -8,7 +8,13 @@ import { CONFIG } from '../config.js';
 export class Parser {
     private static defaultName = CONFIG.outFolder + '/' + CONFIG.poiDataFilename;
 
-    static parse(filename?: string, size?:number): Promise<PoiHandler> {
+    /**
+     * Tries to load the POI-data from the '.csv' file, if not present from the given filename
+     * @param filename the XML-File to parse
+     * @param size the total amount of pois to parse
+     * @returns a PoiHandler containing the parsed data
+     */
+    public static parse(filename?: string, size?:number): Promise<PoiHandler> {
         if (fs.existsSync(this.defaultName)) return this.parseCsv(this.defaultName);
         if (!fs.existsSync(filename)) throw new Error(`No file '${filename}' found!`);
         if (filename.endsWith('.xml')) return this.parseXml(filename, size);
@@ -16,6 +22,12 @@ export class Parser {
         throw new Error('Please specify either a .csv or .xml file!');
     }
 
+    /**
+     * Parses the given XML-file into a PoiHandler and saving the data as '.csv' for future loading improvement
+     * @param filename the filename to parse
+     * @param size the amount of pois
+     * @returns a PoiHandler containing the parsed data
+     */
     private static parseXml(filename:string, size?:number): Promise<PoiHandler> {
         return new Promise((resolve, reject) => {
             const xml = new XmlStream(fs.createReadStream(filename), 'utf-8');
@@ -45,6 +57,11 @@ export class Parser {
         });
     }
 
+    /**
+     * Parses the given '.csv' file into a PoiHandler
+     * @param filename the path to the '.csv' file to parse
+     * @returns a PoiHandler containing the parsed data
+     */
     private static parseCsv(filename:string): Promise<PoiHandler> {
         return new Promise((resolve, reject) => {
             Logger.printProgress(`Parsing '${filename}'`);
@@ -67,6 +84,10 @@ export class Parser {
         });
     }
 
+    /**
+     * Saves the given PoiHandler to a '.csv' file
+     * @param handler the handler to save
+     */
     private static saveToCsv(handler:PoiHandler) {
         Logger.printProgress('Saving parsed data to improve future loadup');
         const stream = fs.createWriteStream(this.defaultName, {flags:'a', encoding: 'utf-8'});
