@@ -179,6 +179,10 @@ export class Logger {
         return lines.join('\n');
     }
 
+    /**
+     * Writes the given text to standard output, updating this.longestMsg while doing so
+     * @param text the text to write
+     */
     private static write(text:string) {
         if (text.length > this.longestMsg) this.longestMsg = text.length + 1;
         process.stdout.write('\r' + ' '.repeat(this.layer * 4) + text);
