@@ -1,6 +1,6 @@
-import { IEntry } from "../utils/combinations-handler";
+import { ICombination } from "../utils/combinations-handler";
 
-export const combinations: IEntry[] = [
+export const combinations: ICombination[] = [
 	{
 		// 41 * 41
 		key: 'amenity,bench',

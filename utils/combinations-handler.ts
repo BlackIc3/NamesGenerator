@@ -1,28 +1,21 @@
 import * as fs from 'fs';
 import { exit } from 'process';
 import { CONFIG } from '../config';
-import { IAnalysisResult } from "./analysing-util";
+import { IAnalysisResult } from '../models/analysisResultModel';
+import { ICombination } from '../models/combinationModel';
 import { Logger } from './logger';
-
-export interface IEntry {
-    key: string;
-    needed: number;
-    adjectives: string[];
-    descriptions: IDescription[];
-}
-
-export interface IDescription {
-    adjectiveEnding: string;
-    description: string;
-}
 
 export class CombinationsHandler {
     private static outputFilename = CONFIG.outFolder + '/' + CONFIG.combinationsFilename;
     private static moduleFilename = '../' + CONFIG.outFolder + '/' + CONFIG.combinationsFilename.replace(/\..+/, '');
 
     private static namesList:string[];
-    private static _combinations:IEntry[];
+    private static _combinations:ICombination[];
 
+    /**
+     * Generates a file to write all the needed combinations into
+     * @param result the result to generate a combinations file for
+     */
     public static generateCombinationsList(result:IAnalysisResult) {
         if (!this.namesList) this.initNamesList();
 
@@ -34,7 +27,16 @@ export class CombinationsHandler {
         Logger.printDone(`[+] Generated '${this.outputFilename}'!`);
     }
 
-    private static flattenResult(result:IAnalysisResult, list:IEntry[], prevKeys:string[], depth = 0, maxDepth = 10): IEntry[] {
+    /**
+     * A helperfunction for generateCombinationsList() to recursively flatten the given result-object into a list
+     * @param result the sub-result to append
+     * @param list the list to append to
+     * @param prevKeys the (growing) list of previous keys
+     * @param depth current recursion depth
+     * @param maxDepth max recursion depth
+     * @returns a list of all key combinations
+     */
+    private static flattenResult(result:IAnalysisResult, list:ICombination[], prevKeys:string[], depth = 0, maxDepth = 10): ICombination[] {
         if (depth >= maxDepth) return list;
         list.push({
             key: prevKeys.join(','),
@@ -47,15 +49,15 @@ export class CombinationsHandler {
         return list;
     }
 
-    public static async validateCombinationsList(list?:string): Promise<boolean> {
+
+    /**
+     * Validates if the current list of combinations can generate enough names to uniquely name each POI. 
+     * Prints every combination where values are missing
+     * @returns whether the current combinations list is valid
+     */
+    public static async validateCombinationsList(): Promise<boolean> {
         if (!this.namesList) this.initNamesList();
         if (!this._combinations) await this.initCombinations();
-
-        const pathToUse = list || this.outputFilename;
-        if (!fs.existsSync(pathToUse)) {
-            console.log(`[!] Unable to load '${pathToUse}', exiting now...`);
-            exit(0);
-        }
 
         const missing:{key:string, missing:number}[] = [];
 
@@ -92,7 +94,11 @@ export class CombinationsHandler {
         }
     }
 
-    public static async getCombinations():Promise<IEntry[]> { 
+    /**
+     * Returns a copy of the current combinations. If none set, it tries to initalize one, exiting if no file can be found
+     * @returns a copy of the current combinations
+     */
+    public static async getCombinations():Promise<ICombination[]> { 
         if (!this._combinations) await this.initCombinations();
         return [...this._combinations];
      }

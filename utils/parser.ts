@@ -6,7 +6,7 @@ import { Logger } from './logger.js';
 import { CONFIG } from '../config.js';
 
 export class Parser {
-    private static defaultName = CONFIG.outFolder + '/' + CONFIG.poiData;
+    private static defaultName = CONFIG.outFolder + '/' + CONFIG.poiDataFilename;
 
     static parse(filename?: string, size?:number): Promise<PoiHandler> {
         if (fs.existsSync(this.defaultName)) return this.parseCsv(this.defaultName);

@@ -1,15 +1,9 @@
-import { Poi } from "../models/poi";
+import { IAnalysisResult } from "../models/analysisResultModel";
 import { PoiHandler } from "../models/PoiHandler";
 import { Logger } from "./logger";
 
 interface IDistribution { byKey: boolean; entries: {}; }
 enum KeyType { Maximal, MostEven }
-
-export interface IAnalysisResult {
-    total: number;
-    pois: Poi[];
-    children: Map<string, IAnalysisResult>;
-}
 
 export class Analyst {
     private static completed = 0;
@@ -105,8 +99,7 @@ export class Analyst {
     }
 
     /**
-     * A function to analyze a given PoiHandler, determening 
-     * 
+     * A function to analyse a given PoiHandler, generating a object representating a decision tree to decide by which key-value-pairs to cluster the data by
      * @param handler           the PoiHandler to analyse
      * @param cutoff            the minimal amount of POIs needed for a category to be analysed further
      * @param byKey             whether the current iteration should search for the most common key or the most common value given a key
@@ -116,7 +109,7 @@ export class Analyst {
      * @param maxDepth          max recursion depth, needs to be even for good results
      * @param depth             current recursion depth
      * @param minSizeReduction  a factor determening by how much a split needs to reduce the current split size to be further analysed in order to avoid having many small splits  
-     * @returns                 AnalysisResult
+     * @returns                 the result of the analysis
      */
     private static analyseRecursive(handler: PoiHandler, cutoff: number, progress: IAnalysisResult, byKey = true, prevKey = "", maxIteration = 10, step = 0, maxDepth = 6, depth = 0, minSizeReduction = 0.2): IAnalysisResult {
         //  return if iterating to deep or if the split is to small to be analysed

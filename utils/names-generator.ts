@@ -1,19 +1,19 @@
 import * as fs from 'fs';
 import { exit } from 'process';
 import { CONFIG } from '../config';
-import { IAnalysisResult } from "./analysing-util";
-import { IDescription, IEntry } from "./combinations-handler";
+import { IAnalysisResult } from '../models/analysisResultModel';
+import { ICombination, IDescription } from '../models/combinationModel';
 import { Logger } from './logger';
 
 export class NamesGenerator {
     private result: IAnalysisResult;
-    private combinations: IEntry[];
+    private combinations: ICombination[];
     private names: string[];
 
     private outFile:string;
 
-    constructor(result: IAnalysisResult, combinations: IEntry[]) {
-        if (!CONFIG.generatedNames) {
+    constructor(result: IAnalysisResult, combinations: ICombination[]) {
+        if (!CONFIG.generatedNamesFilename) {
             console.log('[!] Please specify the generatedNames-Key in the config!');
             exit(0);
         }
@@ -25,7 +25,7 @@ export class NamesGenerator {
         this.names = fs.readFileSync(CONFIG.namesList, { encoding: 'utf-8' }).split('\n');
         this.result = result;
         this.combinations = [...combinations];
-        this.outFile = CONFIG.outFolder + '/' + CONFIG.generatedNames;
+        this.outFile = CONFIG.outFolder + '/' + CONFIG.generatedNamesFilename;
     }
 
     public generateNames() {
@@ -46,7 +46,7 @@ export class NamesGenerator {
         });
 
         stream.end();
-        Logger.printDone('[+] Wrote ' + Logger.beautfiyNumber(count) + ' names to \'' + CONFIG.generatedNames + '\'!');
+        Logger.printDone('[+] Wrote ' + Logger.beautfiyNumber(count) + ' names to \'' + CONFIG.generatedNamesFilename + '\'!');
     }
 
     private generateCombinations(ids: number[], adjectives: string[], descriptions: IDescription[], seed: number, stream:fs.WriteStream) {
