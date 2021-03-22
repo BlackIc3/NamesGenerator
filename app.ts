@@ -10,7 +10,7 @@ import { Parser } from "./utils/parser.js";
 
 /**
  * Parses the POI-data and analyses it, optionally printing the results 
- * @param silent whether to output the current analysisResult to the console and to a file
+ * @param silent whether not to output the current analysisResult to the console and to a file
  * @returns the result of the analysis
  */
 async function analyse(silent = true) {
@@ -21,14 +21,15 @@ async function analyse(silent = true) {
 }
 
 /**
- * If no combinations-file is given, it generates one and exits, otherwise parses the provided combinations, validates if enough names are provided and if so, generates the names
+ * If no combinations-file is given, it generates one and exits, otherwise parses the provided combinations, 
+ * validates if enough names are provided and if so, generates the names
  * @param result the result to work with
  */
 async function validateAndGenerate(result:IAnalysisResult) {
     if (!fs.existsSync(CONFIG.outFolder + '/' + CONFIG.combinationsFilename)) {
         CombinationsHandler.generateCombinationsList(result);
-        console.log('[+] Generated \'' + CONFIG.combinationsFilename + '\'! Exiting now...');
-        exit(1);
+        console.log('[+] Exiting now because a fresh list of combinations is most likely not sufficient...');
+        exit(0);
     }
     if(!await CombinationsHandler.validateCombinationsList()) {
         if (!CONFIG.forceNames) {
@@ -43,7 +44,7 @@ async function validateAndGenerate(result:IAnalysisResult) {
 }
 
 async function main() {
-    const result = await analyse();
+    const result = await analyse(false);
     await validateAndGenerate(result);
 }
 

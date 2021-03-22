@@ -50,9 +50,8 @@ export class Parser {
 
             xml.on('end', () => {
                 clearInterval(interval);
-                Logger.printDone(`[+] Loaded ${Logger.beautfiyNumber(handler.size)} of ${total} Pois in ${Logger.getTimeString(time)}!`);
-                this.saveToCsv(handler);
-                resolve(handler);
+                Logger.printDone(`[+] Loaded ${Logger.beautfiyNumber(handler.size)} of ${Logger.beautfiyNumber(total)} Pois in ${Logger.getTimeString(time)}!`);
+                this.saveToCsv(handler).then(() => resolve(handler));
             });
         });
     }
@@ -88,18 +87,26 @@ export class Parser {
      * Saves the given PoiHandler to a '.csv' file
      * @param handler the handler to save
      */
-    private static saveToCsv(handler:PoiHandler) {
-        Logger.printProgress('Saving parsed data to improve future loadup');
-        const stream = fs.createWriteStream(this.defaultName, {flags:'a', encoding: 'utf-8'});
-
-        handler.forEach((poi, id) => {
-            for (const key in poi.tags) {
-                stream.write([id, key, this.cleanEntry(poi.tags[key])].join(',') + '\n');
-            }
+    private static async saveToCsv(handler:PoiHandler):Promise<void> {
+        return new Promise((resolve, reject) => {
+            Logger.printProgress('Saving parsed data to improve future loadup');
+            if (!fs.existsSync(CONFIG.outFolder)) fs.mkdirSync(CONFIG.outFolder);
+            fs.writeFileSync(this.defaultName, '');
+            
+            const stream = fs.createWriteStream(this.defaultName, {flags:'a', encoding: 'utf-8'});
+    
+            handler.forEach((poi, id) => {
+                for (const key in poi.tags) {
+                    stream.write([id, key, this.cleanEntry(poi.tags[key])].join(',') + '\n');
+                }
+            });
+    
+            stream.end(() => {
+                Logger.printDone(`[+] Saved data to '${this.defaultName}'!`);
+                resolve();
+            });
+            
         });
-
-        stream.end();
-        Logger.printDone(`[+] Saved data to '${this.defaultName}'!`);
     }
 
     private static cleanEntry(input:string):string {

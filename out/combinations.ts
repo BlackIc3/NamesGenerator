@@ -188,6 +188,6 @@ export const combinations: ICombination[] = [
 		key: 'amenity,bench,backrest',
 		needed: 132,
 		adjectives: [],
-		descriptions: [{adjectiveEnding:'er', description:'Rastplatz'}]
+		descriptions: []
 	},
 ];

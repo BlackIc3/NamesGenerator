@@ -109,6 +109,7 @@ export class Logger {
         });
 
         lines.push('];');
+        if (!fs.existsSync(CONFIG.outFolder)) fs.mkdirSync(CONFIG.outFolder);
         fs.writeFileSync(destination, lines.join('\n'));
     }
 
