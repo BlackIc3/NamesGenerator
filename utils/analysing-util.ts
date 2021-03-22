@@ -1,20 +1,20 @@
-import { Poi } from "../models/poi";
+import { IAnalysisResult } from "../models/analysisResultModel";
 import { PoiHandler } from "../models/PoiHandler";
 import { Logger } from "./logger";
 
 interface IDistribution { byKey: boolean; entries: {}; }
 enum KeyType { Maximal, MostEven }
 
-export interface IAnalysisResult {
-    total: number;
-    pois: Poi[];
-    children: Map<string, IAnalysisResult>;
-}
-
 export class Analyst {
     private static completed = 0;
     private static totalAmout = 0;
 
+    /**
+     * Analyses the given PoiHandler on occurences of keys/values to effectively cluster the data by
+     * @param handler the PoiHandler to analyse
+     * @param cutoff the minimal amount of POIs needed for a cluster to be analysed further
+     * @returns a object representating a decision tree on which key-values to cluster the data by
+     */
     public static analyse(handler: PoiHandler, cutoff: number): IAnalysisResult {
         this.completed = 0;
         this.totalAmout = handler.size;
@@ -31,6 +31,12 @@ export class Analyst {
         return result;
     }
 
+    /**
+     * Creates an object containing all keys (or values if a key is supplied) and lists of ids that have the given key/value for a given PoiHandler
+     * @param handler the PoiHandler to analyse
+     * @param key the key to sort the values by
+     * @returns the current distribution by key or by value
+     */
     private static getDistribution(handler: PoiHandler, key = ""): IDistribution {
         const distribution: IDistribution = { byKey: key.length === 0, entries: {} };
         if (distribution.byKey) {
@@ -52,6 +58,13 @@ export class Analyst {
         return distribution;
     }
 
+    /**
+     * Determines the optimal key for the given distribution
+     * @param type the type of key
+     * @param distribution the distribution to use
+     * @param total the total amount of POIs in the distribution
+     * @returns the optimal key
+     */
     private static getKey(type: KeyType, distribution: IDistribution, total: number): string {
         let favKey = Object.keys(distribution.entries)[0]
         let favCount = distribution.entries[favKey].length;
@@ -69,6 +82,11 @@ export class Analyst {
         return favKey;
     }
 
+    /**
+     * Returns the function to use when determening the optimal key for the given distribution
+     * @param type the type of key
+     * @returns the function to determine best key by
+     */
     private static getKeyFunction(type: KeyType): (count: number, favCount: number, total: number) => boolean {
         switch (type) {
             case KeyType.Maximal:
@@ -78,6 +96,13 @@ export class Analyst {
         }
     }
 
+    /**
+     * Splits the given PoiHandler into two PoiHandlers, the ones that have the given key and the ones that don't
+     * @param distribution the distribution to split by
+     * @param handler the PoiHandler to split
+     * @param key the key to split by
+     * @returns two PoiHandlers
+     */
     private static splitHandlerByKey(distribution: IDistribution, handler: PoiHandler, key: string): { hasKey: PoiHandler, doesNotHaveKey: PoiHandler } {
         const hasKey = new PoiHandler();
         const doesNotHaveKey = handler.copy;
@@ -90,6 +115,13 @@ export class Analyst {
         return { hasKey: hasKey, doesNotHaveKey: doesNotHaveKey };
     }
 
+    /**
+     * Deletes the given key at every POI in the given POI handler. 
+     * POIs that have no more keys left afterwards get removed from the PoiHandler and returned afterwards 
+     * @param handler the handler to clean
+     * @param key the key to clean by
+     * @returns a PoiHandler containing all POIs that got removed from the input PoiHandler
+     */
     private static cleanKeys(handler: PoiHandler, key: string): PoiHandler {
         const noMoreTags = new PoiHandler();
         handler.forEach((poi, id) => {
@@ -105,8 +137,7 @@ export class Analyst {
     }
 
     /**
-     * A function to analyze a given PoiHandler, determening 
-     * 
+     * A function to analyse a given PoiHandler, generating a object representating a decision tree to decide by which key-value-pairs to cluster the data by
      * @param handler           the PoiHandler to analyse
      * @param cutoff            the minimal amount of POIs needed for a category to be analysed further
      * @param byKey             whether the current iteration should search for the most common key or the most common value given a key
@@ -116,7 +147,7 @@ export class Analyst {
      * @param maxDepth          max recursion depth, needs to be even for good results
      * @param depth             current recursion depth
      * @param minSizeReduction  a factor determening by how much a split needs to reduce the current split size to be further analysed in order to avoid having many small splits  
-     * @returns                 AnalysisResult
+     * @returns                 the result of the analysis
      */
     private static analyseRecursive(handler: PoiHandler, cutoff: number, progress: IAnalysisResult, byKey = true, prevKey = "", maxIteration = 10, step = 0, maxDepth = 6, depth = 0, minSizeReduction = 0.2): IAnalysisResult {
         //  return if iterating to deep or if the split is to small to be analysed

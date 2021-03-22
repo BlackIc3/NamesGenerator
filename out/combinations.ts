@@ -1,6 +1,6 @@
-import { IEntry } from "../utils/combinations-handler";
+import { ICombination } from "../models/combinationModel";
 
-export const combinations: IEntry[] = [
+export const combinations: ICombination[] = [
 	{
 		// 41 * 41
 		key: 'amenity,bench',
@@ -188,6 +188,6 @@ export const combinations: IEntry[] = [
 		key: 'amenity,bench,backrest',
 		needed: 132,
 		adjectives: [],
-		descriptions: [{adjectiveEnding:'er', description:'Rastplatz'}]
+		descriptions: []
 	},
 ];

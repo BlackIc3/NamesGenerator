@@ -1,24 +1,41 @@
-import { IAnalysisResult } from "./analysing-util";
 import * as fs from 'fs';
-import { IEntry } from "./combinations-handler";
 import { CONFIG } from "../config";
+import { IAnalysisResult } from '../models/analysisResultModel';
+import { ICombination } from '../models/combinationModel';
 
 
 export class Logger {
-    private static longestMsg = 0;
-    private static layer = 0;
+    private static longestMsg = 0; //the length of the longest message so far
+    private static layer = 0; //the depth of the curser
 
+    /**
+     * Move the cursor the the right
+     */
     public static goRight() {this.layer += 1;}
+
+    /**
+     * Move the cursor the the left
+     */
     public static goLeft() { if(this.layer > 0) this.layer -= 1;}
     
+    /**
+     * Returns a nice string representation of the given time
+     * @param inputTime the time in seconds
+     * @returns the given time as a string
+     */
     public static getTimeString(inputTime:number) :string {
         const seconds = inputTime % 60;
         const minutes = Math.floor(inputTime / 60) % 60;
         const hours = Math.floor(inputTime / 3600) % 24;
     
-        return hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+        return hours.toString().padStart(2, '0') + 'h ' + minutes.toString().padStart(2, '0') + 'm ' + seconds.toString().padStart(2, '0') + 's';
     }
 
+    /**
+     * Returns a nice string representation of the given number
+     * @param input a (presumable big) number
+     * @returns the given number as a string
+     */
     public static beautfiyNumber(input:number): string {
         const arr = input.toString().split('');
         let ret = '';
@@ -30,7 +47,16 @@ export class Logger {
         return ret.trim();
     }
 
-    public static printProgress(message:string, current = 0, max = 0, times = []) {
+    /**
+     * Prompts the given message as '[*] message... [==           ] 13% [00h 01m 25s] 1.221s/Entry'
+     * The progressbar and the time information are optional depending on whethter the respective parameters are set
+     * Should be closed with a 'printDone()' call
+     * @param message the message to prompt
+     * @param current current iteration
+     * @param max max iterations
+     * @param times an array containing ms/iteration entries
+     */
+    public static printProgress(message:string, current = 0, max = 0, times:number[] = []) {
         if (message.length > 100) message = message.substring(0, 96);
         let outputString = '[*] ' + message + '...';
     
@@ -44,24 +70,34 @@ export class Logger {
         if (times.length) {
             const avg = times.reduce((p, c) => p + c) / times.length;
             const remaining = Math.round((avg * (max - current)) / 1000);
-            outputString += "\t[" + Logger.getTimeString(remaining) + "] " + (avg / 1000).toFixed(3) + " s/Entry";
+            outputString += "\t[" + Logger.getTimeString(remaining) + "] " + (avg / 1000).toFixed(3) + "s/Entry";
         }
     
         this.write(outputString.padEnd(this.longestMsg - 1, ' '));
     }
     
+    /**
+     * Prompts the given message, usually to close a 'printProgress()' call
+     * @param message the message to prompt
+     */
     public static printDone(message:string) {
         if (message.length > 100) message = message.substring(0, 96) + '...';
         this.write(message.padEnd(this.longestMsg - 1, ' ') + '\n');
     }
 
-    public static outputCombinationsFile(combinations:IEntry[], destination:string, namesListLength = 1) {
+    /**
+     * Writes a string representation of the given combinations list to the given destination file
+     * @param combinations the list of combinations to be stringyfied
+     * @param destination the path of the file to write to
+     * @param namesListLength the length of the default names list to calculate the amount of missing combinations
+     */
+    public static outputCombinationsFile(combinations:ICombination[], destination:string, namesListLength = 1) {
         if (namesListLength === 0) namesListLength = 1;
         
         const sortedList = [...combinations];
         sortedList.sort((a, b) => b.needed - a.needed);
         
-        const header = 'import { IEntry } from "../utils/combinations-handler";\n\nexport const combinations: IEntry[] = [';
+        const header = 'import { ICombination } from "../models/combinationModel";\n\nexport const combinations: ICombination[] = [';
         const lines = [header];
 
         sortedList.forEach((entry) => {
@@ -73,9 +109,15 @@ export class Logger {
         });
 
         lines.push('];');
+        if (!fs.existsSync(CONFIG.outFolder)) fs.mkdirSync(CONFIG.outFolder);
         fs.writeFileSync(destination, lines.join('\n'));
     }
 
+    /**
+     * Turns the different types into string representations (needed for outputCombinationsFile)
+     * @param input the input to stringify (a string, a number or an object)
+     * @returns a nice string representation of the input
+     */
     private static getCorrectString(input: any): string {
         switch (typeof input) {
             case 'string':
@@ -87,16 +129,18 @@ export class Logger {
         }
     }
 
+    /**
+     * Writes a string representation of the given analysis result to the given filepath
+     * @param result the result-obj to be stringyfied
+     * @param filename the filename to write to
+     */
     public static outputAnalysisResult(result:IAnalysisResult, filename?:string) {
         const output = [];
-        //const cleanOutput = [];
 
         result.children.forEach((child, key) => {
             const header = '[i] ' + key + ' [' + Logger.beautfiyNumber(child.total) + ']' +'\n';
             const result = this.stringifyAnalysisResult(child, key);
-            //if (child.pois.length) entries += '\n  - Remaining: ' + this.beautfiyNumber(child.pois.length);
             output.push(header + result);
-            //cleanOutput.push(...result.split('\n').map((line) => line.replace(/'  - '/gm, '')));
         });
 
         if (result.pois.length) output.push('[i] Not groupable: ' + this.beautfiyNumber(result.pois.length));
@@ -106,9 +150,16 @@ export class Logger {
             if (!fs.existsSync(CONFIG.outFolder + '/')) fs.mkdirSync(CONFIG.outFolder);
             fs.writeFileSync(CONFIG.outFolder + '/' + filename, output.join('\n\n'));
         }
-        //return cleanOutput;
     }
 
+    /**
+     * A helper function for outputAnalysisResult() to flatten a given sub-result 
+     * @param result the current sub-result to append
+     * @param key the (growing) key for the full combination
+     * @param isKey if the current result is handled by key (e.g. 'amenity') or by value (e.g. 'bench')
+     * @param output the (growing) current line
+     * @returns a flattenend representation of the given analysis result
+     */
     private static stringifyAnalysisResult(result:IAnalysisResult, key:string, isKey = true, output = '  - '): string {
         if (!isKey) {
             output += '.' + key;
@@ -128,6 +179,10 @@ export class Logger {
         return lines.join('\n');
     }
 
+    /**
+     * Writes the given text to standard output, updating this.longestMsg while doing so
+     * @param text the text to write
+     */
     private static write(text:string) {
         if (text.length > this.longestMsg) this.longestMsg = text.length + 1;
         process.stdout.write('\r' + ' '.repeat(this.layer * 4) + text);

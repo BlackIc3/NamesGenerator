@@ -1,19 +1,24 @@
 import * as fs from 'fs';
 import { exit } from 'process';
 import { CONFIG } from '../config';
-import { IAnalysisResult } from "./analysing-util";
-import { IDescription, IEntry } from "./combinations-handler";
+import { IAnalysisResult } from '../models/analysisResultModel';
+import { ICombination, IDescription } from '../models/combinationModel';
 import { Logger } from './logger';
 
 export class NamesGenerator {
     private result: IAnalysisResult;
-    private combinations: IEntry[];
+    private combinations: ICombination[];
     private names: string[];
 
     private outFile:string;
 
-    constructor(result: IAnalysisResult, combinations: IEntry[]) {
-        if (!CONFIG.generatedNames) {
+    /**
+     * A Generator to create unique names for every POI in the given result
+     * @param result the result to generate names for
+     * @param combinations all combinations of the given result
+     */
+    constructor(result: IAnalysisResult, combinations: ICombination[]) {
+        if (!CONFIG.generatedNamesFilename) {
             console.log('[!] Please specify the generatedNames-Key in the config!');
             exit(0);
         }
@@ -25,9 +30,12 @@ export class NamesGenerator {
         this.names = fs.readFileSync(CONFIG.namesList, { encoding: 'utf-8' }).split('\n');
         this.result = result;
         this.combinations = [...combinations];
-        this.outFile = CONFIG.outFolder + '/' + CONFIG.generatedNames;
+        this.outFile = CONFIG.outFolder + '/' + CONFIG.generatedNamesFilename;
     }
 
+    /**
+     * Generates a list containing all ids with their assigned name
+     */
     public generateNames() {
         let count = 0;
         Logger.printProgress('Generating names', count, this.result.total);
@@ -46,9 +54,17 @@ export class NamesGenerator {
         });
 
         stream.end();
-        Logger.printDone('[+] Wrote ' + Logger.beautfiyNumber(count) + ' names to \'' + CONFIG.generatedNames + '\'!');
+        Logger.printDone('[+] Wrote ' + Logger.beautfiyNumber(count) + ' names to \'' + CONFIG.generatedNamesFilename + '\'!');
     }
 
+    /**
+     * Generates all name-permutations for the given combination, shuffles them and assigns the names to ids, writing the output to the stream
+     * @param ids the ids of the current cluster
+     * @param adjectives the adjectives for the current combination
+     * @param descriptions the descriptions of the current combination
+     * @param seed the seed of the current combination
+     * @param stream the stream to write to
+     */
     private generateCombinations(ids: number[], adjectives: string[], descriptions: IDescription[], seed: number, stream:fs.WriteStream) {
         const permutations:string[] = [];
         if (!adjectives.length) {
@@ -77,6 +93,13 @@ export class NamesGenerator {
         });
     }
 
+    /**
+     * Transform the given parameters into a string with correct grammar
+     * @param name the name to use
+     * @param description the description to use
+     * @param adjective the adjective to use
+     * @returns a correct string representation of the POI-name
+     */
     private getNameString(name: string, description: IDescription, adjective?: string):string {
         const nameToUse = name.endsWith('s') ? name + "'" : name + 's';
         const adjectiveToUse = adjective + description.adjectiveEnding;
@@ -88,25 +111,45 @@ export class NamesGenerator {
 }
 
 class SeededRng {
+    // With these parameters, the generator has a period of exactly 200, producing all numbers from 0-199 (inclusive) at a pseudo-random order
+    // https://en.wikipedia.org/wiki/Linear_congruential_generator#c_%E2%89%A0_0
     private a = 21;
     private m = 200;
     private c = 37;
     private state: number;
 
+    /**
+     * A pseudo-random generator with a perdiod length of 200
+     * @param seed the seed to start at
+     */
     constructor(seed = 0) {
         this.state = seed;
     }
 
+    /**
+     * Returns a random integer
+     * @returns the next random integer
+     */
     public nextInt(): number {
         this.state = (this.a * this.state + this.c) % this.m;
         return this.state;
     }
 
+    /**
+     * Returns a random number in a given range
+     * @param start start of the range
+     * @param end end of the range (exclusive)
+     * @returns a random number within the range
+     */
     public nextRange(start: number, end: number): number {
         const rnd = this.nextInt() / this.m;
         return start + Math.floor((end - start) * rnd);
     }
 
+    /**
+     * Shuffles the given array in place using Sattolo's algorithm (https://danluu.com/sattolo/)
+     * @param array the array to shuffle
+     */
     public shuffleArray(array: any[]) {
         const n = array.length;
         for (let i = 0; i < n - 1; i++) {

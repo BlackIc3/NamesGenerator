@@ -6,6 +6,7 @@
   "main": "app.js",
   "scripts": {
     "start": "tsc --build tsconfig.json && node build/app.js",
+    "validate": "tsc --build tsconfig.json && node build/app.js validate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
