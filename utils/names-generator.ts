@@ -44,7 +44,7 @@ export class NamesGenerator {
         const stream = fs.createWriteStream(this.outFile, {flags:'a', encoding: 'utf-8'});
 
         this.combinations.filter((element) => !!element.adjectives.length || !!element.descriptions.length).forEach((entry, index) => {
-            const keyValueChain = entry.key.split(',');
+            const keyValueChain = !!entry.key.length ? entry.key.split(',') : [];
             let current = this.result;
             keyValueChain.forEach((keyValue) => current = current.children.get(keyValue));
             this.generateCombinations(current.pois.map((poi) => poi.id), entry.adjectives, entry.descriptions, index, stream);
@@ -53,8 +53,7 @@ export class NamesGenerator {
             Logger.printProgress('Generating names', count, this.result.total);
         });
 
-        stream.end();
-        Logger.printDone('[+] Wrote ' + Logger.beautfiyNumber(count) + ' names to \'' + CONFIG.generatedNamesFilename + '\'!');
+        stream.end(() => Logger.printDone('[+] Wrote ' + Logger.beautfiyNumber(count) + ' names to \'' + CONFIG.generatedNamesFilename + '\'!'));
     }
 
     /**
