@@ -166,15 +166,33 @@ export const combinations: ICombination[] = [
 		// 5 * 5
 		key: '',
 		needed: 2102,
-		adjectives: ['test'],
-		descriptions: [{adjectiveEnding:'iger', description:'Test'}]
+		adjectives: [
+			'',
+			'einschüchternd',
+		],
+		descriptions: [
+			{adjectiveEnding:'er', description:'Stützpunkt'},
+			{adjectiveEnding:'e', description:'Befestigung'},
+			{adjectiveEnding:'es', description:'Lager'},
+			{adjectiveEnding:'er', description:'Ort'},
+		]
 	},
 	{
 		// 4 * 4
 		key: 'amenity,bench,survey:date',
 		needed: 1517,
-		adjectives: ['test'],
-		descriptions: [{adjectiveEnding:'iger', description:'Test'}]
+		adjectives: [
+			'',
+			'ruhig',
+			'gemütlich',
+			'entspannend'
+		],
+		descriptions: [
+			{adjectiveEnding: 'e', description: 'Sitzbank'},
+			{adjectiveEnding: 'er', description: 'Ruheort'},
+			{adjectiveEnding: 'e', description: 'Parkbank'},
+			{adjectiveEnding: 'e', description: 'Sitzgelegenheit'},
+		]
 	},
 	{
 		// 4 * 4
@@ -198,7 +216,7 @@ export const combinations: ICombination[] = [
 		key: 'amenity,bench,backrest',
 		needed: 132,
 		adjectives: [
-			'ruhig',
+			'',
 			'gemütlich'
 		],
 		descriptions: [

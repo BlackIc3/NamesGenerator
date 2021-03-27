@@ -101,11 +101,13 @@ export class NamesGenerator {
      */
     private getNameString(name: string, description: IDescription, adjective?: string):string {
         const nameToUse = name.endsWith('s') ? name + "'" : name + 's';
-        const adjectiveToUse = adjective + description.adjectiveEnding;
+        const adjectiveToUse = !!adjective.length 
+            ? adjective + description.adjectiveEnding + ' '
+            : '';
         
         if (!adjective) return nameToUse + ' ' + description.description;
 
-        return nameToUse + ' ' + adjectiveToUse + ' ' + description.description;
+        return nameToUse + ' ' + adjectiveToUse + description.description;
     }
 }
 
