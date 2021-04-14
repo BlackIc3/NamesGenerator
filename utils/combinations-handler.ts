@@ -40,7 +40,8 @@ export class CombinationsHandler {
         if (depth >= maxDepth) return list;
         list.push({
             key: prevKeys.join(','),
-            needed: result.pois.length,
+            needed: result.clusteredPois[0].length,     //the clusteredPois are always sorted by the cluster length (descending)
+            clusters: result.clusteredPois.length,
             adjectives: [],
             descriptions: []
         });

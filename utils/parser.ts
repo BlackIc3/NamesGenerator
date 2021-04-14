@@ -44,7 +44,7 @@ export class Parser {
             xml.collect('tag');
             xml.on('endElement: node', (element) => {
                 const tags: string[][] = element.tag.map((entry) => [entry.$['k'], this.cleanEntry(entry.$['v'])]);
-                if (!tags.find((pair) => pair[0] === 'name')) handler.addPoi(element.$['id'], tags);
+                if (!tags.find((pair) => pair[0] === 'name')) handler.addPoi(element.$['id'], element.$['lat'], element.$['lon'], tags);
                 total++;
             });
 
@@ -96,6 +96,8 @@ export class Parser {
             const stream = fs.createWriteStream(this.defaultName, {flags:'a', encoding: 'utf-8'});
     
             handler.forEach((poi, id) => {
+                stream.write([id, poi.lat, poi.long].join(',') + '\n');
+
                 for (const key in poi.tags) {
                     stream.write([id, key, this.cleanEntry(poi.tags[key])].join(',') + '\n');
                 }

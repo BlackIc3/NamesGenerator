@@ -47,7 +47,9 @@ export class NamesGenerator {
             const keyValueChain = !!entry.key.length ? entry.key.split(',') : [];
             let current = this.result;
             keyValueChain.forEach((keyValue) => current = current.children.get(keyValue));
-            this.generateCombinations(current.pois.map((poi) => poi.id), entry.adjectives, entry.descriptions, index, stream);
+            current.clusteredPois.forEach((cluster) => {
+                this.generateCombinations(cluster.map((poi) => poi.id), entry.adjectives, entry.descriptions, index, stream);
+            });
 
             count += entry.needed;
             Logger.printProgress('Generating names', count, this.result.total);

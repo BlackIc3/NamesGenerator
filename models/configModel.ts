@@ -4,7 +4,7 @@ export interface IConfig {
      */
     inputFile:string;
     /**
-     * The total amount of POIs
+     * The total amount of POIs, only needed for better logging
      */
     total?:number;
     /**
@@ -15,6 +15,10 @@ export interface IConfig {
      * The minimal cutoff of POIs needed for a cluster to explored further when analysing the data
      */
     minCount:number;
+    /**
+     * The maxmial size of a subcluster within a key/value cluster
+     */
+    maxClusterSize:number;
     /**
      * The foldername where to put all output-files
      */

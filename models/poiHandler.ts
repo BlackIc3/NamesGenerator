@@ -14,10 +14,12 @@ export class PoiHandler {
     /**
      * Adds a POI with the given id and tags to the map
      * @param id the id of the POI
+     * @param lat the latitude of the POI
+     * @param long the longitude of the POI
      * @param tags the tags of the POI as string arrays (e.g. [['amenity', 'bench'], ['backrest', 'yes']])
      */
-    public addPoi(id: number, tags?: string[][]) {
-        this._map.set(id, new Poi(id, tags));
+    public addPoi(id: number, lat:number, long:number, tags?: string[][]) {
+        this._map.set(id, new Poi(id, lat, long, tags));
     }
 
     /**
@@ -53,7 +55,7 @@ export class PoiHandler {
      * @param value the value to add
      */
     public addKeyValuePair(id:number, key:string, value:string) {
-        if (!this._map.has(id)) this.addPoi(id);
+        if (!this._map.has(id)) this.addPoi(id, parseFloat(key), parseFloat(value)); //the first line of every poi inside 'attributes.csv' is 'id, lat, long'
         this._map.get(id).tags[key] = value;
     }
 

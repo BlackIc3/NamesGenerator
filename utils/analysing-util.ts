@@ -1,5 +1,6 @@
 import { IAnalysisResult } from "../models/analysisResultModel";
 import { PoiHandler } from "../models/PoiHandler";
+import { ClusterGenerator } from "./cluster-util";
 import { Logger } from "./logger";
 
 interface IDistribution { byKey: boolean; entries: {}; }
@@ -22,12 +23,12 @@ export class Analyst {
         Logger.printProgress('Analyzing data', this.completed, this.totalAmout);
         const start = new Date().getTime();
 
-        const emptyResult = { total: handler.size, pois: [], children: new Map<string, IAnalysisResult>() };
-        const result =  this.analyseRecursive(handler, cutoff, emptyResult);
-        
+        const emptyResult: IAnalysisResult = { total: handler.size, pois: [], clusteredPois: [[]], children: new Map<string, IAnalysisResult>() };
+        const result = this.analyseRecursive(handler, cutoff, emptyResult);
+
         const time = new Date().getTime() - start;
         Logger.printDone('[+] Analyzed ' + Logger.beautfiyNumber(handler.size) + ' POIs in ' + Math.round(time / 1000) + 's!');
-        
+
         return result;
     }
 
@@ -157,6 +158,7 @@ export class Analyst {
 
             this.completed = this.completed + pois.length * 0.5;
             Logger.printProgress('Analyzing data', this.completed, this.totalAmout);
+            progress.clusteredPois = ClusterGenerator.generateCluster(progress.pois);
             return progress;
         }
 
@@ -176,7 +178,13 @@ export class Analyst {
         const hasKeyNoTagLeft = !byKey ? this.cleanKeys(split.hasKey, prevKey) : new PoiHandler();
         const sizeReduction = split.hasKey.size / handler.size;
 
-        const result: IAnalysisResult = { total: split.hasKey.size + hasKeyNoTagLeft.size, pois: hasKeyNoTagLeft.pois, children: new Map<string, IAnalysisResult>() };
+        const result: IAnalysisResult = { 
+            total: split.hasKey.size + hasKeyNoTagLeft.size, 
+            pois: hasKeyNoTagLeft.pois, 
+            children: new Map<string, IAnalysisResult>(),
+            clusteredPois: [[]]
+        };
+        
         progress.children.set(maxKey, result);
 
         // analyse the split of all POIs that contain the current key/key-value pair
@@ -186,15 +194,17 @@ export class Analyst {
         if (split.doesNotHaveKey.size <= cutoff || sizeReduction < minSizeReduction) {
             const pois = [...split.doesNotHaveKey.pois];
             pois.forEach((poi) => progress.pois.push(poi));
-            
+
             this.completed = this.completed + pois.length;
             Logger.printProgress('Analyzing data', this.completed, this.totalAmout);
+            progress.clusteredPois = ClusterGenerator.generateCluster(progress.pois);
             return progress;
         }
 
         // analyse the split of all POIs that do not have the key/key-value pair
         this.analyseRecursive(split.doesNotHaveKey, cutoff, progress, byKey, prevKey, maxIteration, step + 1, maxDepth, depth, minSizeReduction);
-        
+
+        progress.clusteredPois = ClusterGenerator.generateCluster(progress.pois);
         return progress;
     }
 }

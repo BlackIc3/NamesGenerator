@@ -8,6 +8,10 @@ export interface ICombination {
      */
     needed: number;
     /**
+     * The amount of clusters generated for this key
+     */
+    clusters: number;
+    /**
      * The adjectives for the current combination, eg: ['ruhig', 'gemütlich', 'aufregend', 'schön', ...]
      */
     adjectives: string[];
