@@ -51,7 +51,7 @@ export class NamesGenerator {
                 this.generateCombinations(cluster.map((poi) => poi.id), entry.adjectives, entry.descriptions, index, stream);
             });
 
-            count += entry.needed;
+            count += entry.total;
             Logger.printProgress('Generating names', count, this.result.total);
         });
 

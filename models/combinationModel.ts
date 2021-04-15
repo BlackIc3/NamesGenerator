@@ -4,9 +4,13 @@ export interface ICombination {
      */
     key: string;
     /**
-     * The amount of pois with this key/value combination needing a name 
+     * The total amount of POIs for this combination
      */
-    needed: number;
+    total: number;
+    /**
+     * The amount of pois in the biggest cluster 
+     */
+    biggestCluster: number;
     /**
      * The amount of clusters generated for this key
      */

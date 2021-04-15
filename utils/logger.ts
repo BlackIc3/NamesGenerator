@@ -101,7 +101,7 @@ export class Logger {
         const lines = [header];
 
         sortedList.forEach((entry) => {
-            const approxSqrt = Math.ceil(Math.sqrt(entry.needed / namesListLength));
+            const approxSqrt = Math.ceil(Math.sqrt(entry.biggestCluster / namesListLength));
             lines.push('\t{');
             lines.push(`\t\t// ${approxSqrt} * ${approxSqrt}`);
             lines.push(Object.entries(entry).map(([key, value]) => '\t\t' + key + ': ' + this.getCorrectString(value)).join(',\n'));

@@ -40,7 +40,8 @@ export class CombinationsHandler {
         if (depth >= maxDepth) return list;
         list.push({
             key: prevKeys.join(','),
-            needed: result.clusteredPois[0].length,     //the clusteredPois are always sorted by the cluster length (descending)
+            total: result.pois.length,
+            biggestCluster: result.clusteredPois[0].length,     //the clusteredPois are always sorted by the cluster length (descending)
             clusters: result.clusteredPois.length,
             adjectives: [],
             descriptions: []
@@ -66,7 +67,7 @@ export class CombinationsHandler {
             const adjectivesLength = !entry.adjectives.length ? 1 : entry.adjectives.length;
 
             const total = adjectivesLength * entry.descriptions.length * this.namesList.length;
-            if (total < entry.needed) missing.push({key:entry.key, missing:entry.needed - total});
+            if (total < entry.biggestCluster) missing.push({key:entry.key, missing:entry.biggestCluster - total});
         });
 
         const namesCount = !!this.namesList.length ? this.namesList.length : 1;
