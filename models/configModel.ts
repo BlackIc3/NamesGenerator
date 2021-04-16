@@ -4,7 +4,7 @@ export interface IConfig {
      */
     inputFile:string;
     /**
-     * The total amount of POIs
+     * The total amount of POIs, only needed for better logging
      */
     total?:number;
     /**
@@ -12,9 +12,17 @@ export interface IConfig {
      */
     poiDataFilename:string;
     /**
+     * The name of the file of the analysisResult for quick-load
+     */
+    analysisResultFilename:string;
+    /**
      * The minimal cutoff of POIs needed for a cluster to explored further when analysing the data
      */
     minCount:number;
+    /**
+     * The maxmial size of a subcluster within a key/value cluster
+     */
+    maxClusterSize:number;
     /**
      * The foldername where to put all output-files
      */
@@ -35,4 +43,8 @@ export interface IConfig {
      * Force the generator to generate names even if there are insufficient names for some groups leading to name collisions
      */
     forceNames?:boolean;
+    /**
+     * Splits clusters that a greater than the maximal cluster size by force
+     */
+    forceClusterSize?:boolean;
 }

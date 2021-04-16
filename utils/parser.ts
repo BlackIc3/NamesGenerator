@@ -4,6 +4,8 @@ import * as ReadLine from 'readline';
 import { PoiHandler } from '../models/PoiHandler.js';
 import { Logger } from './logger.js';
 import { CONFIG } from '../config.js';
+import { IAnalysisResult } from '../models/analysisResultModel.js';
+import { IShallowAnalysisResult } from '../models/shallowAnalysisResultModel.js';
 
 export class Parser {
     private static defaultName = CONFIG.outFolder + '/' + CONFIG.poiDataFilename;
@@ -44,7 +46,7 @@ export class Parser {
             xml.collect('tag');
             xml.on('endElement: node', (element) => {
                 const tags: string[][] = element.tag.map((entry) => [entry.$['k'], this.cleanEntry(entry.$['v'])]);
-                if (!tags.find((pair) => pair[0] === 'name')) handler.addPoi(element.$['id'], tags);
+                if (!tags.find((pair) => pair[0] === 'name')) handler.addPoi(element.$['id'], element.$['lat'], element.$['lon'], tags);
                 total++;
             });
 
@@ -96,6 +98,8 @@ export class Parser {
             const stream = fs.createWriteStream(this.defaultName, {flags:'a', encoding: 'utf-8'});
     
             handler.forEach((poi, id) => {
+                stream.write([id, poi.lat, poi.long].join(',') + '\n');
+
                 for (const key in poi.tags) {
                     stream.write([id, key, this.cleanEntry(poi.tags[key])].join(',') + '\n');
                 }
@@ -111,5 +115,43 @@ export class Parser {
 
     private static cleanEntry(input:string):string {
         return input.replace(/\n|\r/gm, '').replace(/,/gm, ' ');
+    }
+
+    /**
+     * Parses the string representation of a shallow analysis result at a given filepath into a analysis result
+     * @param filename the filename to parse
+     * @param handler the handler with all pois
+     * @returns the parsed analysis result
+     */
+    public static parseAnalysisResult(filename:string, handler:PoiHandler): IAnalysisResult {
+        Logger.printProgress('Parsing \'' + filename + '\'');
+        try {
+            const file = fs.readFileSync(filename, {encoding:'utf-8'});
+            const shallowResult:IShallowAnalysisResult = JSON.parse(file);
+            const result = this.parseShallowAnalysisResult(shallowResult, handler);
+            Logger.printDone('[+] Succesfully parsed \'' + filename + '\'!')
+            return result;
+        } catch (e) {
+            Logger.printDone('[!] An error occured when parsing \'' + filename + '\'!');
+            return {total: -1, pois: [], clusteredPois: [], children: new Map<string, IAnalysisResult>()};
+        }
+    }
+
+    /**
+     * A helper function for parseAnalysisResult() to parse a shallow analysis result into a analysis result
+     * @param shallowResult the shallow result to parse
+     * @param handler the handler with all pois
+     * @returns the parsed analysis result
+     */
+    private static parseShallowAnalysisResult(shallowResult:IShallowAnalysisResult, handler:PoiHandler):IAnalysisResult {
+        const result:IAnalysisResult = {
+            total: shallowResult.total,
+            pois: shallowResult.pois.map((id) => handler.get(+id)),
+            clusteredPois: shallowResult.clusteredPois.map((cluster) => cluster.map((id) => handler.get(+id))),
+            children: new Map<string, IAnalysisResult>()
+        }
+
+        Object.entries(shallowResult.children).forEach(([key, child]) => result.children.set(key, this.parseShallowAnalysisResult(child, handler)));
+        return result;
     }
 }

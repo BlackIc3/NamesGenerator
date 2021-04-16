@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import { CONFIG } from "../config";
 import { IAnalysisResult } from '../models/analysisResultModel';
 import { ICombination } from '../models/combinationModel';
+import { IShallowAnalysisResult } from '../models/shallowAnalysisResultModel';
 
 
 export class Logger {
@@ -73,7 +74,7 @@ export class Logger {
             outputString += "\t[" + Logger.getTimeString(remaining) + "] " + (avg / 1000).toFixed(3) + "s/Entry";
         }
     
-        this.write(outputString.padEnd(this.longestMsg - 1, ' '));
+        this.write(outputString.padEnd(this.longestMsg, ' '));
     }
     
     /**
@@ -95,13 +96,13 @@ export class Logger {
         if (namesListLength === 0) namesListLength = 1;
         
         const sortedList = [...combinations];
-        sortedList.sort((a, b) => b.needed - a.needed);
+        sortedList.sort((a, b) => b.clusters - a.clusters);
         
         const header = 'import { ICombination } from "../models/combinationModel";\n\nexport const combinations: ICombination[] = [';
         const lines = [header];
 
         sortedList.forEach((entry) => {
-            const approxSqrt = Math.ceil(Math.sqrt(entry.needed / namesListLength));
+            const approxSqrt = Math.ceil(Math.sqrt(entry.biggestCluster / namesListLength));
             lines.push('\t{');
             lines.push(`\t\t// ${approxSqrt} * ${approxSqrt}`);
             lines.push(Object.entries(entry).map(([key, value]) => '\t\t' + key + ': ' + this.getCorrectString(value)).join(',\n'));
@@ -130,16 +131,49 @@ export class Logger {
     }
 
     /**
+     * Generates a shallow version of the given AnalysisResult, essentially mapping all POIs to their ids, saving space/memory  
+     * Mainly used to save a analysisResult to improve startup
+     * @param result the analysisResult to stringify
+     * @returns a shallow (== no POI details) string representation @param result
+     */
+    public static saveAnalysisResult(result:IAnalysisResult) {
+        const outPath = CONFIG.outFolder + '/' + CONFIG.analysisResultFilename;
+        this.printProgress('Saving analysis result to improve further startup');
+        const shallowResult = this.buildShallowAnalysisResult(result);
+        const outputString = JSON.stringify(shallowResult);
+
+        fs.writeFileSync(outPath, outputString);
+        this.printDone('[+] Saved analysis result to \'' + outPath + '\'!');
+    }
+
+    /**
+     * A helper function for saveAnalysisResult(), generating a shallow version of the given AnalysisResult
+     * @param result the analysisResult to flatten
+     * @returns a shallow version of the given analysisResult
+     */
+    private static buildShallowAnalysisResult(result:IAnalysisResult):IShallowAnalysisResult {
+        const returnObj:IShallowAnalysisResult = { 
+            total: result.total,
+            pois:  result.pois.map((poi) => poi.id),
+            clusteredPois: result.clusteredPois.map((cluster) => cluster.map((poi) => poi.id)),
+            children: {},
+        }
+
+        result.children.forEach((child, key) => returnObj.children[key] = this.buildShallowAnalysisResult(child));
+        return returnObj;
+    }
+
+    /**
      * Writes a string representation of the given analysis result to the given filepath
      * @param result the result-obj to be stringyfied
      * @param filename the filename to write to
      */
-    public static outputAnalysisResult(result:IAnalysisResult, filename?:string) {
+    public static printAnalysisResult(result:IAnalysisResult, filename?:string) {
         const output = [];
 
         result.children.forEach((child, key) => {
             const header = '[i] ' + key + ' [' + Logger.beautfiyNumber(child.total) + ']' +'\n';
-            const result = this.stringifyAnalysisResult(child, key);
+            const result = this.flattenAnalysisResult(child, key);
             output.push(header + result);
         });
 
@@ -153,14 +187,14 @@ export class Logger {
     }
 
     /**
-     * A helper function for outputAnalysisResult() to flatten a given sub-result 
+     * A helper function for printAnalysisResult() to flatten a given sub-result 
      * @param result the current sub-result to append
      * @param key the (growing) key for the full combination
      * @param isKey if the current result is handled by key (e.g. 'amenity') or by value (e.g. 'bench')
      * @param output the (growing) current line
      * @returns a flattenend representation of the given analysis result
      */
-    private static stringifyAnalysisResult(result:IAnalysisResult, key:string, isKey = true, output = '  - '): string {
+    private static flattenAnalysisResult(result:IAnalysisResult, key:string, isKey = true, output = '  - '): string {
         if (!isKey) {
             output += '.' + key;
             if (result.children.size) output += ' && ';
@@ -175,7 +209,7 @@ export class Logger {
 
         const lines = [];
         if (result.pois.length) lines.push(`${output.replace(/ && $/, '')}: ${this.beautfiyNumber(result.pois.length)}`);
-        result.children.forEach((child, currentKey) => lines.push(this.stringifyAnalysisResult(child, currentKey, !isKey, output)));
+        result.children.forEach((child, currentKey) => lines.push(this.flattenAnalysisResult(child, currentKey, !isKey, output)));
         return lines.join('\n');
     }
 
