@@ -62,7 +62,6 @@ void outputPoiList(Poi *pois, int numPois, char *filename)
 
 float calcDistance(Poi a, Poi b)
 {
-    //printf("[i] a: (%f, %f) | b: (%f, %f)\n", a.latitude, a.longitude, b.latitude, b.longitude);
     return sqrt(pow(a.latitude - b.latitude, 2) + pow(a.longitude - b.longitude, 2) * 1.0);
 }
 
@@ -70,11 +69,10 @@ Neighbors *findNeighbors(Poi p, Poi *pois, int numPois, float epsilon)
 {
     Neighbors *neighbors = malloc(sizeof(Neighbors));
     neighbors->amount = 0;
-    neighbors->pois = malloc(numPois * numPois * sizeof(Poi*));
+    neighbors->pois = malloc(numPois * numPois * sizeof(Poi *));
     for (Poi *poiPointer = pois; poiPointer < pois + numPois; ++poiPointer)
     {
         float distance = calcDistance(p, *poiPointer);
-        //printf("[i] %i -> %i: %f\n", p.id, poiPointer->id, distance);
         if (distance < epsilon)
         {
             neighbors->pois[neighbors->amount] = poiPointer;
@@ -105,15 +103,15 @@ int dbScan(Poi *pois, int numPois, float epsilon, int minPois)
         p->clusterLabel = clusterID;
 
         int appendCounter = neighbors_p->amount;
-        for (Poi *q = *neighbors_p->pois; q < *neighbors_p->pois + appendCounter - 1; ++q)
+        for (Poi **q = neighbors_p->pois; q < neighbors_p->pois + appendCounter; ++q)
         {
-            if (q->clusterLabel == 0)
-                q->clusterLabel = clusterID;
-            if (q->clusterLabel > -1)
+            if ((*q)->clusterLabel == 0)
+                (*q)->clusterLabel = clusterID;
+            if ((*q)->clusterLabel > -1)
                 continue;
-            q->clusterLabel = clusterID;
+            (*q)->clusterLabel = clusterID;
 
-            Neighbors *neighbors_q = findNeighbors(*q, pois, numPois, epsilon);
+            Neighbors *neighbors_q = findNeighbors(**q, pois, numPois, epsilon);
             if (neighbors_q->amount > minPois)
             {
                 for (int y = 0; y < neighbors_q->amount; y++)
