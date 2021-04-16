@@ -6,11 +6,11 @@ export interface IAnalysisResult {
      */
     total: number;
     /**
-     * The Pois in current cluster that cannot be clustered further
+     * The Pois in the current cluster that cannot be clustered further
      */
     pois: Poi[];
     /**
-     * The Pois in current cluster that cannot be clustered further, clustered into 
+     * The Pois in the current cluster that cannot be clustered further, clustered into 
      * subgroups to reduce the total amount of names that need to be generated for this cluster 
      */
     clusteredPois: Poi[][];

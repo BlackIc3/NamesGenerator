@@ -204,7 +204,7 @@ export class Analyst {
         // analyse the split of all POIs that do not have the key/key-value pair
         this.analyseRecursive(split.doesNotHaveKey, cutoff, progress, byKey, prevKey, maxIteration, step + 1, maxDepth, depth, minSizeReduction);
 
-        progress.clusteredPois = ClusterGenerator.generateCluster(progress.pois);
+        //progress.clusteredPois = ClusterGenerator.generateCluster(progress.pois);
         return progress;
     }
 }

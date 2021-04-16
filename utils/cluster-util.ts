@@ -8,17 +8,21 @@ export class ClusterGenerator {
      * Clusters the given array of POIs dividing by latitude/longitude, 
      * returning an array containing arrays that are maximal the length given as 'maxClusterSize' in the config
      * @param pois the array of POIs to cluster
+     * @param forceMaxClusterSize if true, splits clusters larger than the maxClusterSize further
      * @returns the array of clusters
      */
-    public static generateCluster(pois:Poi[]): Poi[][] {
+    public static generateCluster(pois:Poi[], forceMaxClusterSize?:boolean): Poi[][] {
+        if (pois.some((p) => p.clusterLabel != -1)) console.log('WTF');
         const result = this.dbscan(pois, 0.05, 3);
-        result.forEach((value, index, array) => {
-            if (value.length > CONFIG.maxClusterSize) {
-                const splits = this.divideClusterRecursive(value);
-                array.splice(index, 1);
-                array.push(...splits);
-            }
-        })
+        if (forceMaxClusterSize) {
+            result.forEach((value, index, array) => {
+                if (value.length > CONFIG.maxClusterSize) {
+                    const splits = this.divideClusterRecursive(value);
+                    array.splice(index, 1);
+                    array.push(...splits);
+                }
+            })
+        }
         result.sort((a, b) => b.length - a.length);
         return result;
     }
@@ -142,6 +146,7 @@ export class ClusterGenerator {
      * @returns the list of pois, split into the clusters given the cluster ids of the pois
      */
     private static mapPoisToClusters(pois:Poi[], maxClusterID:number): Poi[][] {
+        if (!pois.length) return [[]];
         const clusteredPois:Poi[][] = [];
         for (let i = -1; i <= maxClusterID; i++) {
             const cluster = pois.filter((p) => p.clusterLabel == i);

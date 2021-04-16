@@ -12,6 +12,10 @@ export interface IConfig {
      */
     poiDataFilename:string;
     /**
+     * The name of the file of the analysisResult for quick-load
+     */
+    analysisResultFilename:string;
+    /**
      * The minimal cutoff of POIs needed for a cluster to explored further when analysing the data
      */
     minCount:number;
