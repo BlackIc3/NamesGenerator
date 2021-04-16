@@ -65,7 +65,7 @@ export class Logger {
             const maxBars = 20;
             const percentage = current / max;
             const barCount = Math.floor(maxBars * percentage);
-            outputString += ':  [' + ''.padStart(barCount, '=').padEnd(maxBars - barCount, ' ') + '] ' + Math.round(percentage * 100).toString().padStart(3, " ") + "%";
+            outputString += ':  [' + ''.padStart(barCount, '=').padEnd(maxBars, ' ') + '] ' + Math.round(percentage * 100).toString().padStart(3, " ") + "%";
         }
     
         if (times.length) {
