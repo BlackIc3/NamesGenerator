@@ -27,7 +27,7 @@ export class Analyst {
         const result = this.analyseRecursive(handler, cutoff, emptyResult);
 
         const time = new Date().getTime() - start;
-        Logger.printDone('[+] Analyzed ' + Logger.beautfiyNumber(handler.size) + ' POIs in ' + Math.round(time / 1000) + 's!');
+        Logger.printDone('[+] Analyzed ' + Logger.beautfiyNumber(handler.size) + ' POIs in ' + Logger.getTimeString(Math.round(time / 1000)));
 
         return result;
     }
