@@ -11,10 +11,9 @@ export class ClusterGenerator {
      * @param forceMaxClusterSize if true, splits clusters larger than the maxClusterSize further
      * @returns the array of clusters
      */
-    public static generateCluster(pois:Poi[], forceMaxClusterSize?:boolean): Poi[][] {
-        if (pois.some((p) => p.clusterLabel != -1)) console.log('WTF');
+    public static generateCluster(pois:Poi[]): Poi[][] {
         const result = this.dbscan(pois, 0.05, 3);
-        if (forceMaxClusterSize) {
+        if (CONFIG.forceClusterSize) {
             result.forEach((value, index, array) => {
                 if (value.length > CONFIG.maxClusterSize) {
                     const splits = this.divideClusterRecursive(value);

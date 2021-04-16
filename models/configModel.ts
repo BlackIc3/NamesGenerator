@@ -43,4 +43,8 @@ export interface IConfig {
      * Force the generator to generate names even if there are insufficient names for some groups leading to name collisions
      */
     forceNames?:boolean;
+    /**
+     * Splits clusters that a greater than the maximal cluster size by force
+     */
+    forceClusterSize?:boolean;
 }

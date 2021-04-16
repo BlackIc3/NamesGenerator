@@ -1,15 +1,16 @@
 import { IConfig } from "./models/configModel";
 
 export const CONFIG:IConfig = {
-    inputFile: 'data/test.xml', //germany_pois.osm
+    inputFile: 'data/germany_pois.osm.xml', //germany_pois.osm
     total: 1073564,
-    poiDataFilename: 'attributesTest.csv',
-    analysisResultFilename: 'analysisResultTest.json',
-    minCount: 10,
+    poiDataFilename: 'attributes.csv',
+    analysisResultFilename: 'analysisResult.json',
+    minCount: 10000,
     maxClusterSize: 10000,
     outFolder: 'out',
-    combinationsFilename: 'combinationsTest.ts',
+    combinationsFilename: 'combinations.ts',
     namesList: 'wordlists\\gods.txt',
     generatedNamesFilename: 'generatedNames.txt',
-    forceNames: false
+    forceNames: true,
+    forceClusterSize: true,
 }
