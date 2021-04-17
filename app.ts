@@ -7,6 +7,7 @@ import { CombinationsHandler } from "./utils/combinations-handler.js";
 import { Logger } from "./utils/logger.js";
 import { NamesGenerator } from "./utils/names-generator.js";
 import { Parser } from "./utils/parser.js";
+import { Plotter } from './utils/plotting-util.js';
 
 if (!fs.existsSync('utils\\clusterHelper\\tmp')) fs.mkdirSync('utils\\clusterHelper\\tmp');
 
@@ -104,6 +105,7 @@ async function main() {
 
 async function plot() {
     const result = await analyse();
+    Plotter.plotResult(result);
 }
 
 if (argv[2] === 'validate') {
@@ -115,7 +117,7 @@ if (argv[2] === 'validate') {
         }
 
     })
-} else if(argv[2] === 'plot') {
+} else if(argv[2] === 'cities') {
     plot();
 } else {
     main();

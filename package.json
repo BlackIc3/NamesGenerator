@@ -7,12 +7,13 @@
   "scripts": {
     "start": "tsc --build tsconfig.json && node build/app.js",
     "validate": "tsc --build tsconfig.json && node build/app.js validate",
+    "cities": "tsc --build tsconfig.json && node build/app.js cities",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "plotly": "^1.0.6",
+    "nodeplotlib": "^0.7.3",
     "xml-stream": "^0.4.5"
   },
   "devDependencies": {
