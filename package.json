@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "plotly": "^1.0.6",
     "xml-stream": "^0.4.5"
   },
   "devDependencies": {

@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import { CONFIG } from "../config";
 import { IAnalysisResult } from '../models/analysisResultModel';
 import { ICombination } from '../models/combinationModel';
+import { Poi } from '../models/poi';
 import { IShallowAnalysisResult } from '../models/shallowAnalysisResultModel';
 
 
@@ -84,6 +85,11 @@ export class Logger {
     public static printDone(message:string) {
         if (message.length > 100) message = message.substring(0, 96) + '...';
         this.write(message.padEnd(this.longestMsg - 1, ' ') + '\n');
+    }
+
+    public static outputClusterData(pois:Poi[], path) {
+        const mappedPois = pois.map((p) => [p.id, p.lat, p.long].join(','));
+        fs.writeFileSync(path, mappedPois.join('\n'))
     }
 
     /**

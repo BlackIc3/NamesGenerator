@@ -38,13 +38,25 @@ export interface IConfig {
     /**
      * The name of the file to write the generated names to
      */
-    generatedNamesFilename?:string;
+    generatedNamesFilename:string;
+    /**
+     * The name of the clusterHelper-binary
+     */
+    clusterHelperBinary:string;
     /**
      * Force the generator to generate names even if there are insufficient names for some groups leading to name collisions
      */
     forceNames?:boolean;
     /**
+     * Verifies the integrity of the analysis result (Should only be used for debugging)
+     */
+    verifyAnalysisResult?:boolean;
+    /**
      * Splits clusters that a greater than the maximal cluster size by force
      */
     forceClusterSize?:boolean;
+    /**
+     * The maximum amount of threads to be used for clustering the data
+     */
+    maxThreads:number;
 }
