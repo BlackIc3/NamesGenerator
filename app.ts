@@ -26,7 +26,7 @@ async function analyse(silent = true) {
     }
 
     const result = await Analyst.analyse(mapHandler, CONFIG.minCount);
-    verifyAnalysisResult(result, mapHandler.pois.map((p) => p.id));
+    if (!!CONFIG.verifyAnalysisResult) verifyAnalysisResult(result, mapHandler.pois.map((p) => p.id));
     if (!silent) Logger.printAnalysisResult(result, `out${CONFIG.minCount}.txt`);
     Logger.saveAnalysisResult(result);
     return result;
@@ -35,7 +35,10 @@ async function analyse(silent = true) {
 function verifyAnalysisResult(result:IAnalysisResult, ids:number[]) {
     const flatResult = flattenResult(result, [], []);
     let multiple = 0;
+    let i = 0;
     for (const id of ids) {
+        Logger.printProgress('Verifying result', i, ids.length);
+        i++;
         const occurences = flatResult.filter((l) => l.ids.includes(id));
         if (occurences.length != 1) {
             multiple++;
@@ -99,6 +102,10 @@ async function main() {
     await generateNames(result);
 }
 
+async function plot() {
+    const result = await analyse();
+}
+
 if (argv[2] === 'validate') {
     CombinationsHandler.validateCombinationsList().then((isValid) => {
         if (isValid) {
@@ -108,6 +115,8 @@ if (argv[2] === 'validate') {
         }
 
     })
+} else if(argv[2] === 'plot') {
+    plot();
 } else {
     main();
 }

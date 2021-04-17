@@ -26,10 +26,11 @@ export class Analyst {
         const emptyResult: IAnalysisResult = { total: handler.size, pois: [], clusteredPois: [[]], children: new Map<string, IAnalysisResult>() };
         const result = this.analyseRecursive(handler, cutoff, emptyResult);
 
+        await ClusterGenerator.isFinished();
+
         const time = new Date().getTime() - start;
         Logger.printDone('[+] Analyzed ' + Logger.beautfiyNumber(handler.size) + ' POIs in ' + Logger.getTimeString(Math.round(time / 1000)));
 
-        await ClusterGenerator.isFinished();
         return result;
     }
 

@@ -11,10 +11,19 @@ export class ClusterGenerator {
     private static runningThreads = 0;
 
     public static async clusterPois(pois: Poi[]): Promise<Poi[][]> {
-        //console.log(`[${this.runningThreads}] Thread ${this.threadID} started!`);
+        const splits = this.divideClusterRecursive(pois, 0, 100000);
+        const result:Poi[][] = [];
+        for (const split of splits) {
+            const clusters = await this.startThread(split);
+            result.push(...clusters);
+        }
+        return result;
+    }
+
+    private static startThread(pois: Poi[]): Promise<Poi[][]> {
         const epsilon = 0.05;
         const minPois = 3;
-        if (false && this.runningThreads >= CONFIG.maxThreads) {
+        if (this.runningThreads >= CONFIG.maxThreads) {
             return new Promise((resolve, reject) => {
                 const interval = setInterval(() => {
                     if (this.runningThreads < CONFIG.maxThreads) {
@@ -127,10 +136,10 @@ export class ClusterGenerator {
      * @param depth current recursion depth
      * @returns the list of clusters
      */
-    private static divideClusterRecursive(currentList: Poi[], depth: number = 0): Poi[][] {
+    private static divideClusterRecursive(currentList: Poi[], depth: number = 0, minSize = CONFIG.maxClusterSize): Poi[][] {
         const result: Poi[][] = [];
 
-        if (currentList.length <= CONFIG.maxClusterSize || depth >= 10) {
+        if (currentList.length <= minSize || depth >= 10) {
             result.push(currentList);
             return result;
         }

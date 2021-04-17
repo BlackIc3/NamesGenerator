@@ -4,8 +4,6 @@
 #include <math.h>
 #include <vector>
 
-using namespace std;
-
 typedef struct
 {
     double id;
@@ -17,7 +15,7 @@ typedef struct
 typedef struct
 {
     int amount;
-    vector<Poi*> pois;
+    std::vector<Poi*> pois;
 } Neighbors;
 
 Poi *parsePoiList(char *path, int numPois)
@@ -71,7 +69,7 @@ Neighbors *findNeighbors(Poi p, Poi *pois, int numPois, float epsilon)
 {
     Neighbors *neighbors = (Neighbors*) malloc(sizeof(Neighbors));
     neighbors->amount = 0;
-    neighbors->pois = vector<Poi*>();
+    neighbors->pois = std::vector<Poi*>();
     for (Poi *poiPointer = pois; poiPointer < pois + numPois; ++poiPointer)
     {
         float distance = calcDistance(p, *poiPointer);
@@ -106,7 +104,7 @@ int dbScan(Poi *pois, int numPois, float epsilon, int minPois)
         int appendCounter = neighbors_p->amount;
         for (int i = 0; i < appendCounter; i++) // Poi **q = neighbors_p->pois; q < neighbors_p->pois + appendCounter; ++q
         {
-            Poi *q = neighbors_p->pois[i];
+            Poi *q = neighbors_p->pois.at(i);
             if (q->clusterLabel == 0)
                 q->clusterLabel = clusterID;
             if (q->clusterLabel > -1)
@@ -118,7 +116,7 @@ int dbScan(Poi *pois, int numPois, float epsilon, int minPois)
             {
                 for (int y = 0; y < neighbors_q->amount; y++) // Poi **neighbor = neighbors_q->pois; neighbor < neighbors_q->pois + neighbors_q->amount; ++neighbor
                 {
-                    neighbors_p->pois.push_back(neighbors_q->pois[y]);
+                    neighbors_p->pois.push_back(neighbors_q->pois.at(y));
                     appendCounter++;
                 }
                 neighbors_p->amount = neighbors_p->amount + neighbors_q->amount;

@@ -48,6 +48,10 @@ export interface IConfig {
      */
     forceNames?:boolean;
     /**
+     * Verifies the integrity of the analysis result (Should only be used for debugging)
+     */
+    verifyAnalysisResult?:boolean;
+    /**
      * Splits clusters that a greater than the maximal cluster size by force
      */
     forceClusterSize?:boolean;
