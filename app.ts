@@ -8,6 +8,8 @@ import { Logger } from "./utils/logger.js";
 import { NamesGenerator } from "./utils/names-generator.js";
 import { Parser } from "./utils/parser.js";
 
+if (!fs.existsSync('utils\\clusterHelper\\tmp')) fs.mkdirSync('utils\\clusterHelper\\tmp');
+
 /**
  * Parses the POI-data and analyses it, optionally printing the results  
  * Saves the analysisResult to the filename specified in the config
@@ -23,7 +25,7 @@ async function analyse(silent = true) {
         return parsedResult;
     }
 
-    const result = Analyst.analyse(mapHandler, CONFIG.minCount);
+    const result = await Analyst.analyse(mapHandler, CONFIG.minCount);
     verifyAnalysisResult(result, mapHandler.pois.map((p) => p.id));
     if (!silent) Logger.printAnalysisResult(result, `out${CONFIG.minCount}.txt`);
     Logger.saveAnalysisResult(result);

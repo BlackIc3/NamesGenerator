@@ -1,8 +1,103 @@
+import * as fs from 'fs';
+import { spawn } from "child_process";
 import { CONFIG } from "../config";
 import { Poi } from "../models/poi";
 import { Logger } from "./logger";
+import { Parser } from "./parser";
 
 export class ClusterGenerator {
+
+    private static threadID = 0;
+    private static runningThreads = 0;
+
+    public static async clusterPois(pois: Poi[]): Promise<Poi[][]> {
+        //console.log(`[${this.runningThreads}] Thread ${this.threadID} started!`);
+        const epsilon = 0.05;
+        const minPois = 3;
+        if (false && this.runningThreads >= CONFIG.maxThreads) {
+            return new Promise((resolve, reject) => {
+                const interval = setInterval(() => {
+                    if (this.runningThreads < CONFIG.maxThreads) {
+                        clearInterval(interval);
+                        resolve(this.runClusterHelper(pois, epsilon, minPois));
+                    }
+                }, 500);
+            });
+        }
+        return this.runClusterHelper(pois, epsilon, minPois);
+    }
+
+    private static runClusterHelper(pois: Poi[], epsilon: number, minPois: number): Promise<Poi[][]> {
+        return new Promise(async (resolve, reject) => {
+            this.threadID++;
+            this.runningThreads++;
+
+            const inFile = 'utils\\clusterHelper\\tmp\\clusterThread' + this.threadID + '-In.csv';
+            const outFile = 'utils\\clusterHelper\\tmp\\clusterThread' + this.threadID + '-Out.csv';
+
+            Logger.outputClusterData(pois, inFile);
+            const args = [
+                inFile,
+                pois.length.toString(),
+                outFile,
+                epsilon.toString(),
+                minPois.toString()
+            ];
+
+            const runner = spawn('utils\\clusterHelper\\' + CONFIG.clusterHelperBinary, args);
+            runner.stdout.on("data", data => {
+                //console.log(data.toString());
+            });
+
+            runner.stderr.on("data", data => {
+                this.runningThreads--;
+                reject(`stderr: ${data}`);
+            });
+
+            runner.on('error', (error) => {
+                this.runningThreads--;
+                reject(`error: ${error.message}`);
+            });
+
+            runner.on("close", code => {
+                this.runningThreads--;
+                if (code !== 0) {
+                    console.log('Arguments: ' + args.join(' '));
+                    reject('Bad Exit Code: ' + code);
+                } else {
+                    const mappedClusters: Poi[][] = this.mapClusters(outFile, pois); 
+                    if (CONFIG.forceClusterSize) {
+                        mappedClusters.forEach((value, index, array) => {
+                            if (value.length > CONFIG.maxClusterSize) {
+                                const splits = this.divideClusterRecursive(value);
+                                array.splice(index, 1);
+                                array.push(...splits);
+                            }
+                        })
+                    }
+                    mappedClusters.sort((a, b) => b.length - a.length);
+
+                    fs.unlinkSync(inFile);
+                    fs.unlinkSync(outFile);
+                    resolve(mappedClusters); 
+                }
+            });
+        })
+    }
+
+    private static mapClusters(filename:string, pois:Poi[]): Poi[][] {
+        const rawData:{id:number; cluster:number}[] = Parser.parseRawClusters(filename);
+        const poisObj:{[key:number]:Poi} = {};
+        pois.forEach((p) => poisObj[p.id] = p);
+
+        let maxID = 0;
+        rawData.forEach((data) => {
+            if (data.cluster > maxID) maxID = data.cluster;
+            if (!!poisObj[data.id]) poisObj[data.id].clusterLabel = data.cluster
+        });
+
+        return this.mapPoisToClusters(pois, maxID);
+    }
 
     /**
      * Clusters the given array of POIs dividing by latitude/longitude, 
@@ -11,7 +106,7 @@ export class ClusterGenerator {
      * @param forceMaxClusterSize if true, splits clusters larger than the maxClusterSize further
      * @returns the array of clusters
      */
-    public static generateCluster(pois:Poi[]): Poi[][] {
+    public static generateCluster(pois: Poi[]): Poi[][] {
         const result = this.dbscan(pois, 0.05, 3);
         if (CONFIG.forceClusterSize) {
             result.forEach((value, index, array) => {
@@ -32,8 +127,8 @@ export class ClusterGenerator {
      * @param depth current recursion depth
      * @returns the list of clusters
      */
-    private static divideClusterRecursive(currentList:Poi[], depth:number = 0): Poi[][] {
-        const result:Poi[][] = [];
+    private static divideClusterRecursive(currentList: Poi[], depth: number = 0): Poi[][] {
+        const result: Poi[][] = [];
 
         if (currentList.length <= CONFIG.maxClusterSize || depth >= 10) {
             result.push(currentList);
@@ -43,7 +138,7 @@ export class ClusterGenerator {
         const splits = this.splitCluster(currentList, depth % 2 === 0);
         const resultSplitA = this.divideClusterRecursive(splits[0], depth + 1);
         const resultSplitB = this.divideClusterRecursive(splits[1], depth + 1);
-        
+
         result.push(...resultSplitA);
         result.push(...resultSplitB);
 
@@ -56,7 +151,7 @@ export class ClusterGenerator {
      * @param byLat if true, sorts the list by latitude, otherwise by longitude
      * @returns the two splits
      */
-    private static splitCluster(list:Poi[], byLat:boolean): [Poi[], Poi[]] {
+    private static splitCluster(list: Poi[], byLat: boolean): [Poi[], Poi[]] {
         if (byLat) {
             list.sort((a, b) => a.lat - b.lat);
         } else {
@@ -73,34 +168,34 @@ export class ClusterGenerator {
      * @param minPoints the minimum amount of neighbors a poi has to have to be considered a cluster
      * @returns the clustered pois
      */
-    private static dbscan(pois:Poi[], epsilon:number, minPoints:number): Poi[][] {
+    private static dbscan(pois: Poi[], epsilon: number, minPoints: number): Poi[][] {
         let progress = 0;
-        
+
         let clusterID = 0;
         for (const p of pois) {
             Logger.printProgress('Clustering ' + Logger.beautfiyNumber(pois.length) + ' pois', progress, pois.length);
-            
+
             if (p.clusterLabel > -1) continue;                              //skip p if already assigned
             const neighbors_p = this.getNeighbors(p, pois, epsilon);        //get neighbors of p
             if (neighbors_p.length < minPoints) {                           //mark p as noise and continue if p has insufficient neighbors
                 p.clusterLabel = 0;
                 continue;
             }
-            
+
             clusterID++;                                                    //increment current clusterID 
             p.clusterLabel = clusterID;                                     //set clusterlabel of p to the current cluster 
-            
+
             progress++;
-            
+
             const poisToExpand = neighbors_p.filter((e) => e.id != p.id);   //determine the POIs to expand further
             for (const q of poisToExpand) {
                 if (q.clusterLabel == 0) q.clusterLabel = clusterID;        //if point q is neighbor of p and labeled as 'Noise', add it to the cluster
                 if (q.clusterLabel > -1) continue;                          //if the point q is already processed (meaning its label is Noise or a clusterID), skip q
                 q.clusterLabel = clusterID;                                 //if the point q is not already in a cluster, add it to the cluster around p
-                
+
                 progress++;
                 Logger.printProgress('Clustering ' + Logger.beautfiyNumber(pois.length) + ' pois', progress, pois.length);
-                
+
                 const neighbors_q = this.getNeighbors(q, pois, epsilon);    //find neighbors of q
                 if (neighbors_q.length >= minPoints) {
                     poisToExpand.push(...neighbors_q);                      //append neighbors of q to the poisToExpand, if q is a core-point
@@ -118,8 +213,8 @@ export class ClusterGenerator {
      * @param epsilon the minimum distance between to pois to be considered neighbors
      * @returns the list of neighbors
      */
-    private static getNeighbors(p:Poi, pois:Poi[], epsilon:number): Poi[] {
-        const neighbors:Poi[] = [];
+    private static getNeighbors(p: Poi, pois: Poi[], epsilon: number): Poi[] {
+        const neighbors: Poi[] = [];
         for (const q of pois) {
             if (this.distance(p, q) <= epsilon) {
                 neighbors.push(q);
@@ -134,7 +229,7 @@ export class ClusterGenerator {
      * @param b poi b
      * @returns the distance between the two pois
      */
-    private static distance(a:Poi, b:Poi): number {
+    private static distance(a: Poi, b: Poi): number {
         return Math.sqrt(Math.pow(a.lat - b.lat, 2) + Math.pow(a.long - b.long, 2))
     }
 
@@ -144,14 +239,26 @@ export class ClusterGenerator {
      * @param maxClusterID the highest cluster id
      * @returns the list of pois, split into the clusters given the cluster ids of the pois
      */
-    private static mapPoisToClusters(pois:Poi[], maxClusterID:number): Poi[][] {
+    private static mapPoisToClusters(pois: Poi[], maxClusterID: number): Poi[][] {
         if (!pois.length) return [[]];
-        const clusteredPois:Poi[][] = [];
+        const clusteredPois: Poi[][] = [];
         for (let i = -1; i <= maxClusterID; i++) {
             const cluster = pois.filter((p) => p.clusterLabel == i);
             if (!!cluster.length) clusteredPois.push(cluster);
         }
 
         return clusteredPois;
+    }
+
+    public static isFinished():Promise<void> {
+        return new Promise((resolve, reject) => {
+            const interval = setInterval(() => {
+                if (this.runningThreads === 0) {
+                    clearInterval(interval);
+                    resolve();
+                }
+                Logger.printProgress('Waiting for ' + this.runningThreads.toString().padStart(2, ' ') + ' thread(s) to finish');
+            }, 500 )
+        })
     }
 }

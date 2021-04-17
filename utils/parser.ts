@@ -117,6 +117,15 @@ export class Parser {
         return input.replace(/\n|\r/gm, '').replace(/,/gm, ' ');
     }
 
+    public static parseRawClusters(filename:string):{id:number, cluster:number}[] {
+        const lines = fs.readFileSync(filename, "utf-8").split('\r\n');
+        lines.pop(); //remove newline at the end
+        return lines.map((line) => { 
+            const splits = line.split(',');
+            return {id: +splits[0], cluster: +splits[1]}; 
+        });
+    }
+
     /**
      * Parses the string representation of a shallow analysis result at a given filepath into a analysis result
      * @param filename the filename to parse

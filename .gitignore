@@ -5,7 +5,7 @@ out/*
 !out/combinations.ts
 
 utils/clusterHelper/*
-!utils/clusterHelper/clusterFinder.c
+!utils/clusterHelper/clusterFinder.c*
 
 data/germany_pois.osm.xml
 attributes.csv

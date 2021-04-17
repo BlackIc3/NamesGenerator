@@ -16,7 +16,7 @@ export class Analyst {
      * @param cutoff the minimal amount of POIs needed for a cluster to be analysed further
      * @returns a object representating a decision tree on which key-values to cluster the data by
      */
-    public static analyse(handler: PoiHandler, cutoff: number): IAnalysisResult {
+    public static async analyse(handler: PoiHandler, cutoff: number): Promise<IAnalysisResult> {
         this.completed = 0;
         this.totalAmout = handler.size;
 
@@ -29,6 +29,7 @@ export class Analyst {
         const time = new Date().getTime() - start;
         Logger.printDone('[+] Analyzed ' + Logger.beautfiyNumber(handler.size) + ' POIs in ' + Logger.getTimeString(Math.round(time / 1000)));
 
+        await ClusterGenerator.isFinished();
         return result;
     }
 
@@ -158,7 +159,7 @@ export class Analyst {
 
             this.completed = this.completed + pois.length * 0.5;
             Logger.printProgress('Analyzing data', this.completed, this.totalAmout);
-            progress.clusteredPois = ClusterGenerator.generateCluster(progress.pois);
+            ClusterGenerator.clusterPois(progress.pois).then((clusteredPois) => progress.clusteredPois = clusteredPois);
             return progress;
         }
 
@@ -197,14 +198,13 @@ export class Analyst {
 
             this.completed = this.completed + pois.length;
             Logger.printProgress('Analyzing data', this.completed, this.totalAmout);
-            progress.clusteredPois = ClusterGenerator.generateCluster(progress.pois);
+            ClusterGenerator.clusterPois(progress.pois).then((clusteredPois) => progress.clusteredPois = clusteredPois);
             return progress;
         }
 
         // analyse the split of all POIs that do not have the key/key-value pair
         this.analyseRecursive(split.doesNotHaveKey, cutoff, progress, byKey, prevKey, maxIteration, step + 1, maxDepth, depth, minSizeReduction);
 
-        //progress.clusteredPois = ClusterGenerator.generateCluster(progress.pois);
         return progress;
     }
 }

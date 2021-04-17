@@ -2,8 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <vector>
 
-const unsigned int MAX_SIZE = 26843545;
+using namespace std;
 
 typedef struct
 {
@@ -16,7 +17,7 @@ typedef struct
 typedef struct
 {
     int amount;
-    Poi **pois;
+    vector<Poi*> pois;
 } Neighbors;
 
 Poi *parsePoiList(char *path, int numPois)
@@ -31,7 +32,7 @@ Poi *parsePoiList(char *path, int numPois)
     char line[1024];
 
     //parse pois
-    Poi *pois = malloc(numPois * sizeof(Poi));
+    Poi *pois = (Poi*) malloc(numPois * sizeof(Poi));
     for (int i = 0; i < numPois; i++)
     {
         memset(line, 0, 1024);
@@ -68,15 +69,15 @@ float calcDistance(Poi a, Poi b)
 
 Neighbors *findNeighbors(Poi p, Poi *pois, int numPois, float epsilon)
 {
-    Neighbors *neighbors = malloc(sizeof(Neighbors));
+    Neighbors *neighbors = (Neighbors*) malloc(sizeof(Neighbors));
     neighbors->amount = 0;
-    neighbors->pois = malloc(MAX_SIZE * sizeof(Poi *));
+    neighbors->pois = vector<Poi*>();
     for (Poi *poiPointer = pois; poiPointer < pois + numPois; ++poiPointer)
     {
         float distance = calcDistance(p, *poiPointer);
         if (distance < epsilon)
         {
-            neighbors->pois[neighbors->amount] = poiPointer;
+            neighbors->pois.push_back(poiPointer);
             neighbors->amount++;
         }
     }
@@ -95,7 +96,6 @@ int dbScan(Poi *pois, int numPois, float epsilon, int minPois)
         if (neighbors_p->amount < minPois)
         {
             p->clusterLabel = 0;
-            free(neighbors_p->pois);
             free(neighbors_p);
             continue;
         }
@@ -104,33 +104,29 @@ int dbScan(Poi *pois, int numPois, float epsilon, int minPois)
         p->clusterLabel = clusterID;
 
         int appendCounter = neighbors_p->amount;
-        for (int i = 0; i < neighbors_p->amount; i++) //Poi **q = neighbors_p->pois; q < neighbors_p->pois + appendCounter; ++q
+        for (int i = 0; i < appendCounter; i++) // Poi **q = neighbors_p->pois; q < neighbors_p->pois + appendCounter; ++q
         {
-            Poi **q = neighbors_p->pois + (i % MAX_SIZE);
-            if ((*q)->clusterLabel == 0)
-                (*q)->clusterLabel = clusterID;
-            if ((*q)->clusterLabel > -1)
+            Poi *q = neighbors_p->pois[i];
+            if (q->clusterLabel == 0)
+                q->clusterLabel = clusterID;
+            if (q->clusterLabel > -1)
                 continue;
-            (*q)->clusterLabel = clusterID;
+            q->clusterLabel = clusterID;
 
-            Neighbors *neighbors_q = findNeighbors(**q, pois, numPois, epsilon);
+            Neighbors *neighbors_q = findNeighbors(*q, pois, numPois, epsilon);
             if (neighbors_q->amount > minPois - 1)
             {
-                for (Poi **neighbor = neighbors_q->pois; neighbor < neighbors_q->pois + neighbors_q->amount; ++neighbor)
+                for (int y = 0; y < neighbors_q->amount; y++) // Poi **neighbor = neighbors_q->pois; neighbor < neighbors_q->pois + neighbors_q->amount; ++neighbor
                 {
-                    neighbors_p->pois[appendCounter] = *neighbor;
-                    appendCounter = (appendCounter + 1) % MAX_SIZE;
+                    neighbors_p->pois.push_back(neighbors_q->pois[y]);
+                    appendCounter++;
                 }
                 neighbors_p->amount = neighbors_p->amount + neighbors_q->amount;
             }
 
-            free(neighbors_q->pois);
             free(neighbors_q);
         }
 
-        //printf("%d\n", neighbors_p->amount);
-
-        free(neighbors_p->pois);
         free(neighbors_p);
     }
 
