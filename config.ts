@@ -11,7 +11,7 @@ export const CONFIG:IConfig = {
     outFolder: 'out',
     combinationsFilename: 'combinations.ts',
     namesList: 'wordlists\\gods.txt',
-    generatedNamesFilename: 'generatedNames.txt',
+    generatedNamesFilename: 'generatedNames.csv',
     clusterHelperBinary:'clusterFinder.exe',
     forceNames: true,
     forceClusterSize: true,
