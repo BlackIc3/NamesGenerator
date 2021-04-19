@@ -10,6 +10,13 @@ export class ClusterGenerator {
     private static threadID = 0;
     private static runningThreads = 0;
 
+    /**
+     * Clusters the given list of POIs using DBSCAN and returns the result  
+     * If the given array is greater than 100 000, the data will be divided  
+     * recursively by latitude/longitude until the unique arrays are small enough
+     * @param pois the POIs to cluster
+     * @returns a promise that resolves to an array consisting of the clusters
+     */
     public static async clusterPois(pois: Poi[]): Promise<Poi[][]> {
         const splits = this.divideClusterRecursive(pois, 0, 100000);
         const result:Poi[][] = [];
@@ -20,8 +27,13 @@ export class ClusterGenerator {
         return result;
     }
 
+    /**
+     * Starts a new thread to cluster the given POIs
+     * @param pois the POIs to cluster
+     * @returns a promies that resolves to the mapped POIs
+     */
     private static startThread(pois: Poi[]): Promise<Poi[][]> {
-        const epsilon = 0.05;
+        const epsilon = 0.1;
         const minPois = 3;
         if (this.runningThreads >= CONFIG.maxThreads) {
             return new Promise((resolve, reject) => {
@@ -36,6 +48,13 @@ export class ClusterGenerator {
         return this.runClusterHelper(pois, epsilon, minPois);
     }
 
+    /**
+     * Invokes the cluster-helper binary to cluster the given POIs with the given parameters
+     * @param pois the POIs to cluster
+     * @param epsilon the minimal distance between the POIs to be considered neighbors
+     * @param minPois the minimum amount of POIs to be considered a cluster
+     * @returns a promise that resolves to the mapped POIs
+     */
     private static runClusterHelper(pois: Poi[], epsilon: number, minPois: number): Promise<Poi[][]> {
         return new Promise(async (resolve, reject) => {
             this.threadID++;
@@ -94,6 +113,12 @@ export class ClusterGenerator {
         })
     }
 
+    /**
+     * Maps the output of the clusterFinder to the existing POIs, returning the found clusters
+     * @param filename the filename to parse
+     * @param pois the pois to map
+     * @returns an array with the clusters
+     */
     private static mapClusters(filename:string, pois:Poi[]): Poi[][] {
         const rawData:{id:number; cluster:number}[] = Parser.parseRawClusters(filename);
         const poisObj:{[key:number]:Poi} = {};
@@ -259,6 +284,10 @@ export class ClusterGenerator {
         return clusteredPois;
     }
 
+    /**
+     * Returns a promise that resolves once all threads stopped
+     * @returns Promise<void>s 
+     */
     public static isFinished():Promise<void> {
         return new Promise((resolve, reject) => {
             const interval = setInterval(() => {

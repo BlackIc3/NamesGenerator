@@ -3,6 +3,7 @@ import { exit, argv } from "process";
 import { CONFIG } from "./config.js";
 import { IAnalysisResult } from './models/analysisResultModel.js';
 import { Analyst } from "./utils/analysing-util.js";
+import { ClusterGenerator } from './utils/cluster-util.js';
 import { CombinationsHandler } from "./utils/combinations-handler.js";
 import { Logger } from "./utils/logger.js";
 import { NamesGenerator } from "./utils/names-generator.js";
@@ -103,22 +104,22 @@ async function main() {
     await generateNames(result);
 }
 
-async function plot() {
-    const result = await analyse();
-    Plotter.plotResult(result);
+async function generateCities() {
+    const key = "amenity";
+    const value = "post_office";
+    const pois = await Parser.parse(CONFIG.inputFile, CONFIG.total);
+    const data = pois.pois.filter((p) => p.tags[key] === value);
+    ClusterGenerator.clusterPois(data).then((result) => Plotter.plotCluster(result, `${result.length} ${key}.${value}`));
+    await ClusterGenerator.isFinished();
 }
 
 if (argv[2] === 'validate') {
     CombinationsHandler.validateCombinationsList().then((isValid) => {
-        if (isValid) {
-            console.log('[+] Combination list is valid!');
-        } else {
-            console.log('[!] Combination list is invalid!');
-        }
-
+        const msg = isValid ? '[+] Combination list is valid!' : '[!] Combination list is invalid!';
+        console.log(msg);
     })
 } else if(argv[2] === 'cities') {
-    plot();
+    generateCities();
 } else {
     main();
 }
