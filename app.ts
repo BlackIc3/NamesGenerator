@@ -3,6 +3,7 @@ import { exit, argv } from "process";
 import { CONFIG } from "./config.js";
 import { IAnalysisResult } from './models/analysisResultModel.js';
 import { Analyst } from "./utils/analysing-util.js";
+import { CitiyUtils } from './utils/city-utils.js';
 import { ClusterGenerator } from './utils/cluster-util.js';
 import { CombinationsHandler } from "./utils/combinations-handler.js";
 import { Logger } from "./utils/logger.js";
@@ -105,12 +106,13 @@ async function main() {
 }
 
 async function generateCities() {
-    const key = "amenity";
-    const value = "post_office";
     const pois = await Parser.parse(CONFIG.inputFile, CONFIG.total);
-    const data = pois.pois.filter((p) => p.tags[key] === value);
-    ClusterGenerator.clusterPois(data).then((result) => Plotter.plotCluster(result, `${result.length} ${key}.${value}`));
-    await ClusterGenerator.isFinished();
+    const [mappedPois, cities] = CitiyUtils.matchPoisToCities(pois.pois);
+
+    //Plotter.plotCities(cities);
+    Plotter.plotPoisPerCity(mappedPois, cities);
+    Logger.outputCities(cities, 'out\\mappedCities.csv');
+    Logger.outputPoisPerCity(mappedPois, 'out\\poisWithCityIDs.csv');
 }
 
 if (argv[2] === 'validate') {

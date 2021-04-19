@@ -2,164 +2,38 @@ import { ICombination } from "../models/combinationModel";
 
 export const combinations: ICombination[] = [
 	{
-		// 6 * 6
-		key: 'leisure,playground',
-		total: 23433,
-		biggestCluster: 3059,
-		clusters: 992,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 5 * 5
-		key: 'amenity',
-		total: 10989,
-		biggestCluster: 2276,
-		clusters: 934,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
-		key: 'leisure,picnic_table',
-		total: 15320,
-		biggestCluster: 1644,
-		clusters: 911,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 5 * 5
-		key: 'tourism,picnic_site',
-		total: 23629,
-		biggestCluster: 2152,
-		clusters: 882,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 18 * 18
-		key: 'amenity,bench,backrest,yes',
-		total: 83902,
-		biggestCluster: 36205,
-		clusters: 840,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 5 * 5
-		key: 'amenity,shelter',
-		total: 11712,
-		biggestCluster: 1881,
-		clusters: 793,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 23 * 23
-		key: 'amenity,bench,backrest,yes,material,wood',
-		total: 108473,
-		biggestCluster: 56837,
-		clusters: 742,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
-		key: 'tourism,viewpoint',
-		total: 12432,
-		biggestCluster: 1686,
-		clusters: 729,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
-		key: 'amenity,bench,backrest,no,material,wood',
-		total: 15519,
-		biggestCluster: 1148,
-		clusters: 706,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
-		key: 'amenity,fountain',
-		total: 11581,
-		biggestCluster: 1733,
-		clusters: 700,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
-		key: 'amenity,bench,backrest,no',
-		total: 11870,
-		biggestCluster: 1081,
-		clusters: 685,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
+		// 3 * 3
 		key: 'amenity,bench,material',
 		total: 8706,
-		biggestCluster: 1283,
-		clusters: 657,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 18 * 18
-		key: 'amenity,hunting_stand',
-		total: 72861,
-		biggestCluster: 35171,
-		clusters: 624,
+		biggestCluster: 1008,
+		clusters: 326,
 		adjectives: [],
 		descriptions: []
 	},
 	{
 		// 5 * 5
-		key: 'historic,memorial',
-		total: 6908,
-		biggestCluster: 2185,
-		clusters: 595,
+		key: 'amenity,bench,backrest,no',
+		total: 13068,
+		biggestCluster: 2310,
+		clusters: 323,
 		adjectives: [],
 		descriptions: []
 	},
 	{
 		// 5 * 5
-		key: 'amenity,shelter,shelter_type',
-		total: 6314,
-		biggestCluster: 1992,
-		clusters: 570,
+		key: 'amenity,bench,backrest,no,material,wood',
+		total: 15519,
+		biggestCluster: 2047,
+		clusters: 283,
 		adjectives: [],
 		descriptions: []
 	},
 	{
-		// 3 * 3
+		// 5 * 5
 		key: 'amenity,bench,backrest,yes,material,metal',
 		total: 12474,
-		biggestCluster: 954,
-		clusters: 530,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
-		key: 'tourism',
-		total: 8436,
-		biggestCluster: 1383,
-		clusters: 506,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 40 * 40
-		key: 'amenity,bench',
-		total: 194207,
-		biggestCluster: 174389,
-		clusters: 485,
+		biggestCluster: 2678,
+		clusters: 281,
 		adjectives: [],
 		descriptions: []
 	},
@@ -167,44 +41,35 @@ export const combinations: ICombination[] = [
 		// 3 * 3
 		key: 'amenity,bench,backrest,yes,material',
 		total: 7175,
-		biggestCluster: 846,
-		clusters: 443,
+		biggestCluster: 821,
+		clusters: 259,
 		adjectives: [],
 		descriptions: []
 	},
 	{
-		// 4 * 4
+		// 5 * 5
 		key: 'amenity,bench,backrest,yes,seats',
 		total: 8836,
-		biggestCluster: 1076,
-		clusters: 419,
+		biggestCluster: 2399,
+		clusters: 254,
 		adjectives: [],
 		descriptions: []
 	},
 	{
-		// 4 * 4
-		key: 'amenity,shelter,shelter_type,public_transport',
-		total: 5027,
-		biggestCluster: 1065,
-		clusters: 337,
+		// 2 * 2
+		key: 'amenity,bench,backrest,no,material',
+		total: 4921,
+		biggestCluster: 422,
+		clusters: 218,
 		adjectives: [],
 		descriptions: []
 	},
 	{
-		// 3 * 3
-		key: 'amenity,clock',
-		total: 5470,
-		biggestCluster: 833,
-		clusters: 311,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
-		key: 'leisure,picnic_table,covered',
-		total: 3198,
-		biggestCluster: 1018,
-		clusters: 307,
+		// 6 * 6
+		key: 'historic,memorial',
+		total: 10575,
+		biggestCluster: 2852,
+		clusters: 200,
 		adjectives: [],
 		descriptions: []
 	},
@@ -212,44 +77,8 @@ export const combinations: ICombination[] = [
 		// 4 * 4
 		key: 'amenity,hunting_stand,shelter,yes',
 		total: 7294,
-		biggestCluster: 1262,
-		clusters: 305,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 3 * 3
-		key: 'amenity,bench,backrest,no,material',
-		total: 4921,
-		biggestCluster: 511,
-		clusters: 298,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 3 * 3
-		key: 'historic,wayside_shrine',
-		total: 6388,
-		biggestCluster: 785,
-		clusters: 296,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
-		key: 'historic,memorial,memorial',
-		total: 3667,
-		biggestCluster: 1487,
-		clusters: 282,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 3 * 3
-		key: 'amenity,hunting_stand,shelter,yes,height',
-		total: 7783,
-		biggestCluster: 934,
-		clusters: 255,
+		biggestCluster: 1316,
+		clusters: 180,
 		adjectives: [],
 		descriptions: []
 	},
@@ -257,8 +86,8 @@ export const combinations: ICombination[] = [
 		// 3 * 3
 		key: 'amenity,hunting_stand,shelter',
 		total: 5721,
-		biggestCluster: 554,
-		clusters: 247,
+		biggestCluster: 835,
+		clusters: 174,
 		adjectives: [],
 		descriptions: []
 	},
@@ -267,70 +96,61 @@ export const combinations: ICombination[] = [
 		key: 'amenity,hunting_stand,height',
 		total: 5019,
 		biggestCluster: 851,
-		clusters: 232,
+		clusters: 174,
 		adjectives: [],
 		descriptions: []
 	},
 	{
-		// 4 * 4
-		key: 'amenity,post_office',
-		total: 3408,
-		biggestCluster: 1715,
-		clusters: 231,
+		// 9 * 9
+		key: 'amenity,bench,backrest,yes',
+		total: 83902,
+		biggestCluster: 8495,
+		clusters: 163,
 		adjectives: [],
 		descriptions: []
 	},
 	{
-		// 3 * 3
-		key: 'tourism,viewpoint,direction',
-		total: 2721,
-		biggestCluster: 898,
-		clusters: 229,
+		// 8 * 8
+		key: 'amenity,bench,backrest,yes,material,wood',
+		total: 108473,
+		biggestCluster: 6581,
+		clusters: 163,
 		adjectives: [],
 		descriptions: []
 	},
 	{
-		// 3 * 3
-		key: 'leisure,playground,access',
-		total: 3968,
-		biggestCluster: 847,
-		clusters: 210,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
-		key: 'historic,wayside_shrine,religion',
-		total: 4759,
-		biggestCluster: 1463,
-		clusters: 191,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
-		key: 'amenity,fast_food',
-		total: 1989,
-		biggestCluster: 1154,
-		clusters: 155,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 4 * 4
+		// 9 * 9
 		key: 'leisure',
-		total: 1912,
-		biggestCluster: 1124,
-		clusters: 152,
+		total: 20430,
+		biggestCluster: 8270,
+		clusters: 163,
+		adjectives: [],
+		descriptions: []
+	},
+	{
+		// 10 * 10
+		key: 'tourism',
+		total: 23589,
+		biggestCluster: 9770,
+		clusters: 159,
 		adjectives: [],
 		descriptions: []
 	},
 	{
 		// 3 * 3
-		key: 'tourism,picnic_site,fireplace',
-		total: 1638,
-		biggestCluster: 758,
-		clusters: 133,
+		key: 'amenity,hunting_stand,shelter,yes,height',
+		total: 7783,
+		biggestCluster: 1008,
+		clusters: 148,
+		adjectives: [],
+		descriptions: []
+	},
+	{
+		// 2 * 2
+		key: 'amenity,bench,source',
+		total: 3077,
+		biggestCluster: 296,
+		clusters: 143,
 		adjectives: [],
 		descriptions: []
 	},
@@ -338,26 +158,17 @@ export const combinations: ICombination[] = [
 		// 3 * 3
 		key: '',
 		total: 2102,
-		biggestCluster: 827,
-		clusters: 98,
+		biggestCluster: 568,
+		clusters: 123,
 		adjectives: [],
 		descriptions: []
 	},
 	{
-		// 3 * 3
-		key: 'amenity,fountain,drinking_water',
-		total: 1113,
-		biggestCluster: 582,
-		clusters: 86,
-		adjectives: [],
-		descriptions: []
-	},
-	{
-		// 2 * 2
-		key: 'amenity,bench,backrest,no,seats',
-		total: 1198,
-		biggestCluster: 229,
-		clusters: 82,
+		// 8 * 8
+		key: 'amenity,bench',
+		total: 189613,
+		biggestCluster: 5925,
+		clusters: 103,
 		adjectives: [],
 		descriptions: []
 	},
@@ -365,17 +176,53 @@ export const combinations: ICombination[] = [
 		// 3 * 3
 		key: 'historic',
 		total: 1075,
-		biggestCluster: 638,
-		clusters: 71,
+		biggestCluster: 468,
+		clusters: 97,
 		adjectives: [],
 		descriptions: []
 	},
 	{
-		// 2 * 2
-		key: 'amenity,shelter,bench',
-		total: 442,
-		biggestCluster: 339,
-		clusters: 26,
+		// 7 * 7
+		key: 'leisure,playground',
+		total: 27401,
+		biggestCluster: 5372,
+		clusters: 94,
+		adjectives: [],
+		descriptions: []
+	},
+	{
+		// 8 * 8
+		key: 'tourism,picnic_site',
+		total: 25267,
+		biggestCluster: 5554,
+		clusters: 87,
+		adjectives: [],
+		descriptions: []
+	},
+	{
+		// 9 * 9
+		key: 'amenity,hunting_stand',
+		total: 72861,
+		biggestCluster: 8544,
+		clusters: 86,
+		adjectives: [],
+		descriptions: []
+	},
+	{
+		// 7 * 7
+		key: 'historic,wayside_shrine',
+		total: 11147,
+		biggestCluster: 5161,
+		clusters: 66,
+		adjectives: [],
+		descriptions: []
+	},
+	{
+		// 8 * 8
+		key: 'amenity',
+		total: 58045,
+		biggestCluster: 7198,
+		clusters: 30,
 		adjectives: [],
 		descriptions: []
 	},
@@ -383,8 +230,17 @@ export const combinations: ICombination[] = [
 		// 1 * 1
 		key: 'amenity,bench,backrest',
 		total: 132,
-		biggestCluster: 74,
+		biggestCluster: 68,
 		clusters: 11,
+		adjectives: [],
+		descriptions: []
+	},
+	{
+		// 4 * 4
+		key: 'amenity,bench,survey:date',
+		total: 1517,
+		biggestCluster: 1380,
+		clusters: 8,
 		adjectives: [],
 		descriptions: []
 	},

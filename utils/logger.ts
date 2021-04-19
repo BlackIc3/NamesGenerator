@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { CONFIG } from "../config";
 import { IAnalysisResult } from '../models/analysisResultModel';
+import { ICity } from '../models/cityModel';
 import { ICombination } from '../models/combinationModel';
 import { Poi } from '../models/poi';
 import { IShallowAnalysisResult } from '../models/shallowAnalysisResultModel';
@@ -13,23 +14,23 @@ export class Logger {
     /**
      * Move the cursor the the right
      */
-    public static goRight() {this.layer += 1;}
+    public static goRight() { this.layer += 1; }
 
     /**
      * Move the cursor the the left
      */
-    public static goLeft() { if(this.layer > 0) this.layer -= 1;}
-    
+    public static goLeft() { if (this.layer > 0) this.layer -= 1; }
+
     /**
      * Returns a nice string representation of the given time
      * @param inputTime the time in seconds
      * @returns the given time as a string
      */
-    public static getTimeString(inputTime:number) :string {
+    public static getTimeString(inputTime: number): string {
         const seconds = inputTime % 60;
         const minutes = Math.floor(inputTime / 60) % 60;
         const hours = Math.floor(inputTime / 3600) % 24;
-    
+
         return hours.toString().padStart(2, '0') + 'h ' + minutes.toString().padStart(2, '0') + 'm ' + seconds.toString().padStart(2, '0') + 's';
     }
 
@@ -38,7 +39,7 @@ export class Logger {
      * @param input a (presumable big) number
      * @returns the given number as a string
      */
-    public static beautfiyNumber(input:number): string {
+    public static beautfiyNumber(input: number): string {
         const arr = input.toString().split('');
         let ret = '';
         arr.reverse().forEach((digit, index) => {
@@ -58,38 +59,70 @@ export class Logger {
      * @param max max iterations
      * @param times an array containing ms/iteration entries
      */
-    public static printProgress(message:string, current = 0, max = 0, times:number[] = []) {
+    public static printProgress(message: string, current = 0, max = 0, times: number[] = []) {
         if (message.length > 100) message = message.substring(0, 96);
         let outputString = '[*] ' + message + '...';
-    
+
         if (max != 0) {
             const maxBars = 20;
             const percentage = current / max;
             const barCount = Math.floor(maxBars * percentage);
             outputString += ':  [' + ''.padStart(barCount, '=').padEnd(maxBars, ' ') + '] ' + Math.round(percentage * 100).toString().padStart(3, " ") + "%";
         }
-    
+
         if (times.length) {
             const avg = times.reduce((p, c) => p + c) / times.length;
             const remaining = Math.round((avg * (max - current)) / 1000);
             outputString += "\t[" + Logger.getTimeString(remaining) + "] " + (avg / 1000).toFixed(3) + "s/Entry";
         }
-    
+
         this.write(outputString.padEnd(this.longestMsg, ' '));
     }
-    
+
     /**
      * Prompts the given message, usually to close a 'printProgress()' call
      * @param message the message to prompt
      */
-    public static printDone(message:string) {
+    public static printDone(message: string) {
         if (message.length > 100) message = message.substring(0, 96) + '...';
         this.write(message.padEnd(this.longestMsg - 1, ' ') + '\n');
     }
 
-    public static outputClusterData(pois:Poi[], path) {
+    /**
+     * Outputs the given list of POIs as a .csv file, containing:  
+     * id, latitude, longitude
+     * @param pois the pois to save
+     * @param path the path to write to
+     */
+    public static outputClusterData(pois: Poi[], path: string) {
         const mappedPois = pois.map((p) => [p.id, p.lat, p.long].join(','));
-        fs.writeFileSync(path, mappedPois.join('\n'))
+        fs.writeFileSync(path, mappedPois.join('\n'));
+    }
+
+    /**
+    * Outputs the given list of POIs as a .csv file, containing:  
+    * id, cityID
+    * @param pois the pois to save
+    * @param path the path to write to
+    */
+    public static outputPoisPerCity(pois: Poi[], path: string) {
+        this.printProgress('Saving poi data');
+        const mappedPois = pois.map((p) => [p.id, p.city].join(','));
+        fs.writeFileSync(path, mappedPois.join('\n'));
+        this.printDone('[+] Saved poi data to \'' + path + '\'!');
+    }
+
+    /**
+    * Outputs the given list of cities as a .csv file, containing:  
+    * cityID, name, latitude, longitude
+    * @param cities the pois to save
+    * @param path the path to write to
+    */
+    public static outputCities(cities: ICity[], path: string) {
+        this.printProgress('Saving city data');
+        const mappedCities = cities.map((c) => [c.id, c.name, c.lat, c.long].join(','));
+        fs.writeFileSync(path, mappedCities.join('\n'));
+        this.printDone('[+] Saved city data to \'' + path + '\'!');
     }
 
     /**
@@ -98,12 +131,12 @@ export class Logger {
      * @param destination the path of the file to write to
      * @param namesListLength the length of the default names list to calculate the amount of missing combinations
      */
-    public static outputCombinationsFile(combinations:ICombination[], destination:string, namesListLength = 1) {
+    public static outputCombinationsFile(combinations: ICombination[], destination: string, namesListLength = 1) {
         if (namesListLength === 0) namesListLength = 1;
-        
+
         const sortedList = [...combinations];
         sortedList.sort((a, b) => b.clusters - a.clusters);
-        
+
         const header = 'import { ICombination } from "../models/combinationModel";\n\nexport const combinations: ICombination[] = [';
         const lines = [header];
 
@@ -142,7 +175,7 @@ export class Logger {
      * @param result the analysisResult to stringify
      * @returns a shallow (== no POI details) string representation @param result
      */
-    public static saveAnalysisResult(result:IAnalysisResult) {
+    public static saveAnalysisResult(result: IAnalysisResult) {
         const outPath = CONFIG.outFolder + '/' + CONFIG.analysisResultFilename;
         this.printProgress('Saving analysis result to improve further startup');
         const shallowResult = this.buildShallowAnalysisResult(result);
@@ -157,10 +190,10 @@ export class Logger {
      * @param result the analysisResult to flatten
      * @returns a shallow version of the given analysisResult
      */
-    private static buildShallowAnalysisResult(result:IAnalysisResult):IShallowAnalysisResult {
-        const returnObj:IShallowAnalysisResult = { 
+    private static buildShallowAnalysisResult(result: IAnalysisResult): IShallowAnalysisResult {
+        const returnObj: IShallowAnalysisResult = {
             total: result.total,
-            pois:  result.pois.map((poi) => poi.id),
+            pois: result.pois.map((poi) => poi.id),
             clusteredPois: result.clusteredPois.map((cluster) => cluster.map((poi) => poi.id)),
             children: {},
         }
@@ -174,11 +207,11 @@ export class Logger {
      * @param result the result-obj to be stringyfied
      * @param filename the filename to write to
      */
-    public static printAnalysisResult(result:IAnalysisResult, filename?:string) {
+    public static printAnalysisResult(result: IAnalysisResult, filename?: string) {
         const output = [];
 
         result.children.forEach((child, key) => {
-            const header = '[i] ' + key + ' [' + Logger.beautfiyNumber(child.total) + ']' +'\n';
+            const header = '[i] ' + key + ' [' + Logger.beautfiyNumber(child.total) + ']' + '\n';
             const result = this.flattenAnalysisResult(child, key);
             output.push(header + result);
         });
@@ -200,7 +233,7 @@ export class Logger {
      * @param output the (growing) current line
      * @returns a flattenend representation of the given analysis result
      */
-    private static flattenAnalysisResult(result:IAnalysisResult, key:string, isKey = true, output = '  - '): string {
+    private static flattenAnalysisResult(result: IAnalysisResult, key: string, isKey = true, output = '  - '): string {
         if (!isKey) {
             output += '.' + key;
             if (result.children.size) output += ' && ';
@@ -223,7 +256,7 @@ export class Logger {
      * Writes the given text to standard output, updating this.longestMsg while doing so
      * @param text the text to write
      */
-    private static write(text:string) {
+    private static write(text: string) {
         if (text.length > this.longestMsg) this.longestMsg = text.length + 1;
         process.stdout.write('\r' + ' '.repeat(this.layer * 4) + text);
     }

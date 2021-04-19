@@ -4,6 +4,7 @@ import { CONFIG } from "../config";
 import { Poi } from "../models/poi";
 import { Logger } from "./logger";
 import { Parser } from "./parser";
+import { ICity } from '../models/cityModel';
 
 export class ClusterGenerator {
 
@@ -258,12 +259,12 @@ export class ClusterGenerator {
     }
 
     /**
-     * Calculates the distance between two pois
-     * @param a poi a
-     * @param b poi b
+     * Calculates the distance between two pois or cities
+     * @param a poi or city a
+     * @param b poi or city b
      * @returns the distance between the two pois
      */
-    private static distance(a: Poi, b: Poi): number {
+    public static distance(a: Poi | ICity, b: Poi | ICity): number {
         return Math.sqrt(Math.pow(a.lat - b.lat, 2) + Math.pow(a.long - b.long, 2))
     }
 
