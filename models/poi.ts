@@ -2,6 +2,7 @@ export class Poi {
     private _id: number;
     private _lat: number;
     private _long: number;
+    private _city: number;
     private _clusterLabel: number;
     public tags: {};
 
@@ -17,6 +18,7 @@ export class Poi {
         this._lat = lat;
         this._long = long;
         this._clusterLabel = -1;
+        this._city = -1;
         this.tags = {};
         tags?.forEach((pair) => this.tags[pair[0]] = pair[1]);
     }
@@ -53,7 +55,17 @@ export class Poi {
     public set clusterLabel(x: number) { this._clusterLabel = x; }
 
     /**
+     * The city the POI is located in
+     */
+    public get city() { return this._city; }
+    
+    /**
+     * The city the POI is located in
+     */
+    public set city(city:number) { this._city = city; }
+
+    /**
      * A deep copy of the POI
      */
-    public get copy(): Poi { return new Poi(this._id, this._lat, this.long, Object.entries(this.tags)); }
+    public get copy(): Poi { const p = new Poi(this._id, this._lat, this.long, Object.entries(this.tags)); p.city = this._city; return p; }
 }

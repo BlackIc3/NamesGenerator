@@ -36,6 +36,10 @@ export interface IConfig {
      */
     namesList?:string;
     /**
+     * The path to the .csv list with city information
+     */
+    citylistFilename?:string;
+    /**
      * The name of the file to write the generated names to
      */
     generatedNamesFilename:string;

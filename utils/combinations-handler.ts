@@ -71,10 +71,13 @@ export class CombinationsHandler {
         });
 
         const namesCount = !!this.namesList.length ? this.namesList.length : 1;
+        let counter = 0;
         missing.forEach((entry) => {
             const approxSqrt = Math.ceil(Math.sqrt(entry.missing / namesCount));
+            counter += 2 * approxSqrt;
             console.log(`[!] '${entry.key}': ${entry.missing} combinations missing! (${approxSqrt} * ${approxSqrt})`);
         });
+        console.log(`[i] ${counter} combinations missing in total!`);
 
         return !missing.length;
     }

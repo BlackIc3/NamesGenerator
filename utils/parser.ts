@@ -6,6 +6,7 @@ import { Logger } from './logger.js';
 import { CONFIG } from '../config.js';
 import { IAnalysisResult } from '../models/analysisResultModel.js';
 import { IShallowAnalysisResult } from '../models/shallowAnalysisResultModel.js';
+import { ICity } from '../models/cityModel.js';
 
 export class Parser {
     private static defaultName = CONFIG.outFolder + '/' + CONFIG.poiDataFilename;
@@ -162,5 +163,22 @@ export class Parser {
 
         Object.entries(shallowResult.children).forEach(([key, child]) => result.children.set(key, this.parseShallowAnalysisResult(child, handler)));
         return result;
+    }
+
+    public static parseCities(filename:string):ICity[] {
+        const lines = fs.readFileSync(filename, "utf-8").split('\n');
+        const cities = lines.map((line, index) => {
+            if (!line.length) return;
+            const splits = line.replace(/"/g, '').split(',');
+            const city:ICity = {
+                name: splits[0],
+                id: index + 1,
+                lat: +splits[2],
+                long: +splits[3],
+            };
+            return city;
+        });
+
+        return cities;
     }
 }
