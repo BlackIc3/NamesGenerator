@@ -8,6 +8,11 @@ import { Parser } from "./parser";
 
 export class CitiyUtils {
 
+    /**
+     * Parses the provided list of cities and assigns each POI the cityID of the closest city
+     * @param pois the pois to match
+     * @returns a tuple with the list of pois as first entry and the list of cities as second entry
+     */
     public static matchPoisToCities(pois:Poi[]): [Poi[], ICity[]] {
         if (!CONFIG.citylistFilename) {
             console.log('[!] Please specify a city list in the Config to continue...')
@@ -26,6 +31,12 @@ export class CitiyUtils {
         return [pois, cities];
     }
 
+    /**
+     * A helperfunction for matchPoisToCities() to find the closest city for a given POI
+     * @param p the POI to find the closest city for
+     * @param cities the list of cities
+     * @returns the closest city to the POI
+     */
     private static findClosestCity(p:Poi, cities:ICity[]):ICity {
         let closest = cities[0];
         let closestDist = ClusterGenerator.distance(p, closest);

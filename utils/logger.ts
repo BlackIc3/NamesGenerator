@@ -135,7 +135,7 @@ export class Logger {
         if (namesListLength === 0) namesListLength = 1;
 
         const sortedList = [...combinations];
-        sortedList.sort((a, b) => b.clusters - a.clusters);
+        sortedList.sort((a, b) => b.biggestCluster - a.biggestCluster);
 
         const header = 'import { ICombination } from "../models/combinationModel";\n\nexport const combinations: ICombination[] = [';
         const lines = [header];
