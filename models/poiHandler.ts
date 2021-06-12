@@ -85,6 +85,14 @@ export class PoiHandler {
      * The number of POIs in this PoiHandler
      */
     public get size():number {return this._map.size;}
+
+    /**
+     * A copy of this PoiHandler, containing only POIs without the key 'name'
+     */
+    public get nameless():PoiHandler {
+        const copy = new Map<number, Poi>([...this._map.entries()].filter((entry) => !Object.keys(entry[1].tags).includes('name')));
+        return new PoiHandler(copy);
+    }
     
     /**
      * A deep copy of the PoiHandler

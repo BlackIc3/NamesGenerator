@@ -21,7 +21,7 @@ if (!fs.existsSync('utils\\clusterHelper\\tmp')) fs.mkdirSync('utils\\clusterHel
  */
 async function analyse(silent = true) {
     const pathToAnalysisResult = CONFIG.outFolder + '/' + CONFIG.analysisResultFilename;
-    const mapHandler = await Parser.parse(CONFIG.inputFile, CONFIG.total);
+    const mapHandler = (await Parser.parse(CONFIG.inputFile, CONFIG.total)).nameless;
 
     if (fs.existsSync(pathToAnalysisResult)) {
         const parsedResult = Parser.parseAnalysisResult(pathToAnalysisResult, mapHandler);

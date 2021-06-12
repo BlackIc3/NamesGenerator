@@ -47,13 +47,13 @@ export class Parser {
             xml.collect('tag');
             xml.on('endElement: node', (element) => {
                 const tags: string[][] = element.tag.map((entry) => [entry.$['k'], this.cleanEntry(entry.$['v'])]);
-                if (!tags.find((pair) => pair[0] === 'name')) handler.addPoi(element.$['id'], element.$['lat'], element.$['lon'], tags);
+                handler.addPoi(element.$['id'], element.$['lat'], element.$['lon'], tags);
                 total++;
             });
 
             xml.on('end', () => {
                 clearInterval(interval);
-                Logger.printDone(`[+] Loaded ${Logger.beautfiyNumber(handler.size)} of ${Logger.beautfiyNumber(total)} Pois in ${Logger.getTimeString(time)}!`);
+                Logger.printDone(`[+] Loaded ${Logger.beautfiyNumber(total)} Pois with ${Logger.beautfiyNumber(handler.nameless.size)} nameless Pois in ${Logger.getTimeString(time)}!`);
                 this.saveToCsv(handler).then(() => resolve(handler));
             });
         });

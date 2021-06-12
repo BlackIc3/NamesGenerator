@@ -3,7 +3,7 @@ import { IConfig } from "./models/configModel";
 export const CONFIG:IConfig = {
     inputFile: 'data/germany_pois.osm.xml', //germany_pois.osm
     citylistFilename: 'data/cities.csv',
-    total: 1073564,
+    total: 1115132,
     poiDataFilename: 'attributes.csv',
     analysisResultFilename: 'analysisResult.json',
     minCount: 10000,

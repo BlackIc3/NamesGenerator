@@ -7,5 +7,5 @@ out/*
 utils/clusterHelper/*
 !utils/clusterHelper/clusterFinder.c*
 
-data/germany_pois.osm.xml
+data/*.xml
 attributes.csv

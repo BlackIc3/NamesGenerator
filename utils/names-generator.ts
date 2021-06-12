@@ -34,7 +34,8 @@ export class NamesGenerator {
     }
 
     /**
-     * Generates a list containing all ids with their assigned name
+     * Generates a list containing all ids with their assigned name and ouputs it to a file  
+     * (Overrites existing outfile)
      */
     public generateNames() {
         let count = 0;
