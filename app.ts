@@ -133,7 +133,6 @@ async function generateCities() {
     const pois = await Parser.parse(CONFIG.inputFile, CONFIG.total);
     const [mappedPois, cities] = CitiyUtils.matchPoisToCities(pois.pois);
 
-    //Plotter.plotCities(cities);
     Plotter.plotPoisPerCity(mappedPois, cities);
     Logger.outputCities(cities, 'out\\mappedCities.csv');
     Logger.outputPoisPerCity(mappedPois, 'out\\poisWithCityIDs.csv');

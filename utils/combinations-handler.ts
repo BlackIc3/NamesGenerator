@@ -51,6 +51,11 @@ export class CombinationsHandler {
         return list;
     }
 
+    private static updateCombinationsList(): void {
+        //TODO If combinations exist, parse current combinations, update meta-data for each combination
+        //TODO Give update on changes
+        //TODO Warn before inserting new or removing combinations
+    }
 
     /**
      * Validates if the current list of combinations can generate enough names to uniquely name each POI. 
