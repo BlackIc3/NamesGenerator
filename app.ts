@@ -4,7 +4,6 @@ import { CONFIG } from "./config.js";
 import { IAnalysisResult } from './models/analysisResultModel.js';
 import { Analyst } from "./utils/analysing-util.js";
 import { CitiyUtils } from './utils/city-utils.js';
-import { ClusterGenerator } from './utils/cluster-util.js';
 import { CombinationsHandler } from "./utils/combinations-handler.js";
 import { Logger } from "./utils/logger.js";
 import { NamesGenerator } from "./utils/names-generator.js";
@@ -41,7 +40,7 @@ async function analyse(silent = true) {
  * @param result the AnalysisResult to verify
  * @param ids the list of POI-IDs that where parsed
  */
-function verifyAnalysisResult(result:IAnalysisResult, ids:number[]) {
+function verifyAnalysisResult(result: IAnalysisResult, ids: number[]) {
     const flatResult = flattenResult(result, [], []);
     let multiple = 0;
     let i = 0;
@@ -71,9 +70,9 @@ function verifyAnalysisResult(result:IAnalysisResult, ids:number[]) {
  * @param maxDepth the maximal recursion depth
  * @returns an array of {key:string, ids:number[]} objects
  */
-function flattenResult(result:IAnalysisResult, list:{key:string, ids:number[]}[], prevKeys:string[], depth = 0, maxDepth = 10): {key:string, ids:number[]}[] {
+function flattenResult(result: IAnalysisResult, list: { key: string, ids: number[] }[], prevKeys: string[], depth = 0, maxDepth = 10): { key: string, ids: number[] }[] {
     if (depth >= maxDepth) return list;
-    list.push({key:prevKeys.join(','), ids:result.pois.map((p) => p.id)});
+    list.push({ key: prevKeys.join(','), ids: result.pois.map((p) => p.id) });
 
     result.children.forEach((value, key) => flattenResult(value, list, [...prevKeys, key], depth + 1, maxDepth));
     return list;
@@ -90,38 +89,23 @@ async function generateNames(result: IAnalysisResult) {
 }
 
 /**
- * Generates all needed key-value-pairs for a given analysis result. Writes the output to a file and exits if the file does not exist already
- * @param result the result analysis result to work with
- */
-function generateCombinationsList(result: IAnalysisResult) {
-    if (!fs.existsSync(CONFIG.outFolder + '/' + CONFIG.combinationsFilename)) {
-        CombinationsHandler.generateCombinationsList(result);
-        console.log('[+] Exiting now because a fresh list of combinations is most likely not sufficient...');
-        exit(0);
-    }
-}
-
-/**
- * Validates if the current combinations list is sufficient to generate unique names, exiting the program if that is not the case 
- */
-async function validateCombinationsList() {
-    if (!await CombinationsHandler.validateCombinationsList()) {
-        if (!CONFIG.forceNames) {
-            console.log('[!] Insufficient words found, exiting now...');
-            exit(0);
-        }
-    }
-}
-
-/**
  * Analyses the given POI-Data, generates a list of all needed combinations and exists if no combinations list is provided.  
  * Otherwise parses the combination list and generates names for the analysed POIs
  */
 async function main() {
     const result = await analyse();
-    generateCombinationsList(result);
-    await validateCombinationsList();
-    await generateNames(result);
+    if (!CombinationsHandler.combinationListExists()) {
+        CombinationsHandler.generateCombinationsList(result);
+    } else {
+        await CombinationsHandler.updateCombinationsList(result);
+    }
+
+    if (CONFIG.forceNames || await CombinationsHandler.validateCombinationsList()) {
+        await generateNames(result);
+    } else {
+        console.log('[!] Insufficient words found, exiting now...');
+        exit(0);
+    }
 }
 
 /**
@@ -142,9 +126,9 @@ async function generateCities() {
  * Analyses the given POI-Data and plots the clusters of the given key-chain
  * @param key the comma seperated key-chain of the cluster to explore (e.g. "amenity,bench,backrest")
  */
-async function plotCluster(key:string) {
+async function plotCluster(key: string) {
     let groupToPlot = await analyse();
-    
+
     key.split(',').forEach((value) => {
         if (!groupToPlot.children.has(value)) {
             console.log('[!] Key error at \'' + value + '\'! Exiting now...');
@@ -156,16 +140,15 @@ async function plotCluster(key:string) {
 }
 
 
-
-
 if (argv[2] === 'validate') {
-    CombinationsHandler.validateCombinationsList().then((isValid) => {
+    CombinationsHandler.validateCombinationsList()
+    .then((isValid) => {
         const msg = isValid ? '[+] Combination list is valid!' : '[!] Combination list is invalid!';
         console.log(msg);
-    })
-} else if(argv[2] === 'cities') {
+    });
+} else if (argv[2] === 'cities') {
     generateCities();
-} else if(argv[2] === 'plot') {
+} else if (argv[2] === 'plot') {
     if (argv.length > 3) plotCluster(argv[3]);
 } else {
     main();

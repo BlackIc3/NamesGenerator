@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { CONFIG } from "../config";
 import { IAnalysisResult } from '../models/analysisResultModel';
 import { ICity } from '../models/cityModel';
-import { ICombination } from '../models/combinationModel';
+import { ICombination, IDescription } from '../models/combinationModel';
 import { Poi } from '../models/poi';
 import { IShallowAnalysisResult } from '../models/shallowAnalysisResultModel';
 
@@ -165,8 +165,33 @@ export class Logger {
             case 'number':
                 return input.toString();
             case 'object':
-                return '[]';
+                if (!input.length) return '[]';
+                if (typeof input[0] === 'string') return '[' + input.map((e: string) => "'" + e + "'").join(', ') + ']';
+                return this.stringifyDescriptions(input);
         }
+    }
+
+    private static stringifyDescriptions(descriptions: IDescription[]) {
+        const lines = descriptions
+            .map((d) => '\t\t\t{adjectiveEnding: \'' + d.adjectiveEnding + '\', description: \'' + d.description + '\'}')
+            .join(',\n');
+        return '[\n' + lines + '\t\t]'
+    }
+
+    public static printCombinationsUpdates(newKeys:string[], updatedKeys:string[], unneededKeys:string[]) {
+        if (newKeys.length) this.safePrintList(newKeys, 'new');
+        if (updatedKeys.length) this.safePrintList(updatedKeys, 'updated');
+        if (unneededKeys.length) this.safePrintList(unneededKeys, 'unneeded');
+    }
+
+    private static safePrintList(list:string[], keyword:'new'|'updated'|'unneeded', threshold = 5) {
+        let out = '[i] ' + list.length + ' ' + keyword + ' keys';
+        if (list.length <= threshold) {
+            out += ':\n';
+            out += list.map((el) => '\t- \'' + el + '\'').join('\n');
+        } else {out += '!';}
+        
+        console.log(out);
     }
 
     /**

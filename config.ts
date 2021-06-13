@@ -1,10 +1,10 @@
 import { IConfig } from "./models/configModel";
 
 export const CONFIG:IConfig = {
-    inputFile: 'data/germany_pois.osm.xml', //germany_pois.osm
+    inputFile: 'data/germany_pois.osm.xml', 
     citylistFilename: 'data/cities.csv',
     total: 1115132,
-    poiDataFilename: 'attributes.csv',
+    poiDataFilename: 'attributes.csv', //allPoisNoKeys.csv
     analysisResultFilename: 'analysisResult.json',
     minCount: 10000,
     maxClusterSize: 10000,
@@ -13,7 +13,7 @@ export const CONFIG:IConfig = {
     namesList: 'wordlists\\gods.txt',
     generatedNamesFilename: 'generatedNames.csv',
     clusterHelperBinary:'clusterFinder.exe',
-    forceNames: true,
+    forceNames: false,
     forceClusterSize: true,
     maxThreads:15
 }

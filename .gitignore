@@ -7,5 +7,6 @@ out/*
 utils/clusterHelper/*
 !utils/clusterHelper/clusterFinder.c*
 
-data/*.xml
+data
+!data/*.csv
 attributes.csv

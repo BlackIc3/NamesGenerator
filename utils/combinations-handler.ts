@@ -9,14 +9,14 @@ export class CombinationsHandler {
     private static outputFilename = CONFIG.outFolder + '/' + CONFIG.combinationsFilename;
     private static moduleFilename = '../' + CONFIG.outFolder + '/' + CONFIG.combinationsFilename.replace(/\..+/, '');
 
-    private static namesList:string[];
-    private static _combinations:ICombination[];
+    private static namesList: string[];
+    private static _combinations: ICombination[];
 
     /**
      * Generates a file to write all the needed combinations into
      * @param result the result to generate a combinations file for
      */
-    public static generateCombinationsList(result:IAnalysisResult) {
+    public static generateCombinationsList(result: IAnalysisResult) {
         if (!this.namesList) this.initNamesList();
 
         Logger.printProgress(`Generating '${this.outputFilename}'`);
@@ -36,7 +36,7 @@ export class CombinationsHandler {
      * @param maxDepth max recursion depth
      * @returns a list of all key combinations
      */
-    private static flattenResult(result:IAnalysisResult, list:ICombination[], prevKeys:string[], depth = 0, maxDepth = 10): ICombination[] {
+    private static flattenResult(result: IAnalysisResult, list: ICombination[], prevKeys: string[], depth = 0, maxDepth = 10): ICombination[] {
         if (depth >= maxDepth) return list;
         list.push({
             key: prevKeys.join(','),
@@ -51,10 +51,49 @@ export class CombinationsHandler {
         return list;
     }
 
-    private static updateCombinationsList(): void {
-        //TODO If combinations exist, parse current combinations, update meta-data for each combination
-        //TODO Give update on changes
-        //TODO Warn before inserting new or removing combinations
+    private static listToObj(list: ICombination[]): { [key: string]: ICombination } {
+        const obj = {};
+        list.forEach((e) => obj[e.key] = e);
+        return obj;
+    }
+
+    private static objToList(obj: { [key: string]: ICombination }): ICombination[] {
+        return [...Object.values(obj)];
+    }
+
+    public static async updateCombinationsList(result: IAnalysisResult): Promise<void> {
+        const newResult = this.listToObj(this.flattenResult(result, [], []));
+        const current = this.listToObj(await this.getCombinations());
+
+        const keysNew = [];
+        const keysUpdated = [];
+        const keysUnneeded = Object.keys(current);
+
+        for (const key of Object.keys(newResult)) {
+            if (!current[key]) {
+                //key does not exist in current combinations
+                current[key] = newResult[key];
+                keysNew.push(key);
+            } else {
+                if (current[key].total !== newResult[key].total
+                    || current[key].clusters !== newResult[key].clusters
+                    || current[key].biggestCluster !== newResult[key].biggestCluster) {
+
+                    //update current key
+                    current[key].total = newResult[key].total;
+                    current[key].clusters = newResult[key].clusters;
+                    current[key].biggestCluster = newResult[key].biggestCluster;
+                    keysUpdated.push(key);
+                }
+            }
+
+            const index = keysUnneeded.indexOf(key);
+            if (index !== -1) keysUnneeded.splice(index, 1);
+        }
+
+        this._combinations = this.objToList(current);
+        Logger.printCombinationsUpdates(keysNew, keysUpdated, keysUnneeded);
+        Logger.outputCombinationsFile(this._combinations, this.outputFilename, this.namesList?.length);
     }
 
     /**
@@ -66,13 +105,13 @@ export class CombinationsHandler {
         if (!this.namesList) this.initNamesList();
         if (!this._combinations) await this.initCombinations();
 
-        const missing:{key:string, missing:number}[] = [];
+        const missing: { key: string, missing: number }[] = [];
 
         this._combinations.forEach((entry) => {
             const adjectivesLength = !entry.adjectives.length ? 1 : entry.adjectives.length;
 
             const total = adjectivesLength * entry.descriptions.length * this.namesList.length;
-            if (total < entry.biggestCluster) missing.push({key:entry.key, missing:entry.biggestCluster - total});
+            if (total < entry.biggestCluster) missing.push({ key: entry.key, missing: entry.biggestCluster - total });
         });
 
         const namesCount = !!this.namesList.length ? this.namesList.length : 1;
@@ -92,7 +131,7 @@ export class CombinationsHandler {
      */
     private static initNamesList() {
         if (fs.existsSync(CONFIG.namesList)) {
-            this.namesList = fs.readFileSync(CONFIG.namesList, {encoding: 'utf-8'}).split('\n');
+            this.namesList = fs.readFileSync(CONFIG.namesList, { encoding: 'utf-8' }).split('\n');
         } else {
             this.namesList = [];
         }
@@ -114,8 +153,17 @@ export class CombinationsHandler {
      * Returns a copy of the current combinations. If none set, it tries to initalize one, exiting if no file can be found
      * @returns a copy of the current combinations
      */
-    public static async getCombinations():Promise<ICombination[]> { 
+    public static async getCombinations(): Promise<ICombination[]> {
         if (!this._combinations) await this.initCombinations();
         return [...this._combinations];
-     }
+    }
+
+    /**
+     * Checks if a combination file already exists at the configured filepath
+     * @returns whether a combinations list exists
+     */
+    public static combinationListExists(): Boolean {
+        return fs.existsSync(this.outputFilename);
+    }
+
 }
