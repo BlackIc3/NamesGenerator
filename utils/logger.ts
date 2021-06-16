@@ -207,7 +207,7 @@ export class Logger {
      * @param updatedKeys The list of keys, where the amount of needed entries changed
      * @param unneededKeys The list of keys, that are no longer needed
      */
-    public static printCombinationsUpdates(newKeys: string[], updatedKeys: string[], unneededKeys: string[]) {
+    public static printCombinationsUpdates(newKeys: ICombination[], updatedKeys: ICombination[], unneededKeys: ICombination[]) {
         if (newKeys.length) this.safePrintList(newKeys, 'new');
         if (updatedKeys.length) this.safePrintList(updatedKeys, 'updated');
         if (unneededKeys.length) this.safePrintList(unneededKeys, 'unneeded');
@@ -219,11 +219,11 @@ export class Logger {
      * @param keyword The type of change
      * @param threshold The limit of how many keys should be printed
      */
-    private static safePrintList(list: string[], keyword: 'new' | 'updated' | 'unneeded', threshold = 5) {
+    private static safePrintList(list: ICombination[], keyword: 'new' | 'updated' | 'unneeded', threshold = 5) {
         let out = '[i] ' + list.length + ' ' + keyword + ' keys';
         if (list.length <= threshold) {
             out += ':\n';
-            out += list.map((el) => '\t- \'' + el + '\'').join('\n');
+            out += list.map((el) => '\t- \'' + el.key + '\' (' + el.approxEntries + ' * ' + el.approxEntries + ')').join('\n');
         } else { out += '!'; }
 
         this.prettyLog(out);

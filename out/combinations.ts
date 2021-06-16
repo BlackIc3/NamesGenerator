@@ -269,6 +269,7 @@ export const combinations: ICombination[] = [
 	},
 	{
 		// 5 * 5
+		// unneeded
 		key: 'amenity,bench,backrest,yes,seats',
 		total: 8836,
 		approxEntries: 5,
@@ -665,6 +666,7 @@ export const combinations: ICombination[] = [
 	},
 	{
 		// 2 * 2
+		// unneeded
 		key: 'amenity,bench,backrest,no,seats',
 		total: 1198,
 		approxEntries: 2,

@@ -83,25 +83,25 @@ export class CombinationsHandler {
         const newResult = this.listToObj(this.flattenResult(result, [], []));
         const current = this.listToObj(await this.getCombinations());
 
-        const keysNew = [];
-        const keysUpdated = [];
-        const keysUnneeded = Object.keys(current);
+        const keysNew:ICombination[] = [];
+        const keysUpdated:ICombination[] = [];
+        const keysUnneeded = await this.getCombinations();
 
         for (const key of Object.keys(newResult)) {
             if (!current[key]) {
                 //key does not exist in current combinations
                 current[key] = newResult[key];
-                keysNew.push(key);
+                keysNew.push(newResult[key]);
             } else if (current[key].approxEntries !== newResult[key].approxEntries) {
                 //update current key
                 current[key].total = newResult[key].total;
                 current[key].approxEntries = newResult[key].approxEntries;
                 current[key].clusters = newResult[key].clusters;
                 current[key].biggestCluster = newResult[key].biggestCluster;
-                keysUpdated.push(key);
+                keysUpdated.push(newResult[key]);
             }
 
-            const index = keysUnneeded.indexOf(key);
+            const index = keysUnneeded.findIndex((value) => value.key === key);
             if (index !== -1) keysUnneeded.splice(index, 1);
         }
 
