@@ -15,7 +15,7 @@ export class CitiyUtils {
      */
     public static matchPoisToCities(pois:Poi[]): [Poi[], ICity[]] {
         if (!CONFIG.citylistFilename) {
-            console.log('[!] Please specify a city list in the Config to continue...')
+            Logger.prettyLog('[!] Please specify a city list in the Config to continue...')
             exit(0);
         }
 

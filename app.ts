@@ -51,12 +51,12 @@ function verifyAnalysisResult(result: IAnalysisResult, ids: number[]) {
         if (occurences.length != 1) {
             multiple++;
             const msg = !occurences.length ? 'Missing id \'' + id + '!' : 'Duplicate id \'' + id + '\': ' + occurences.map((o) => o.key).join(' | ');
-            console.log('[!] ' + msg);
+            Logger.printDone('[!] ' + msg);
         }
     }
 
     if (!!multiple) {
-        console.log('[!] Invalid analysis result! Exiting now...');
+        Logger.printDone('[!] Invalid analysis result! Exiting now...');
         exit();
     }
 }
@@ -103,7 +103,7 @@ async function main() {
     if (CONFIG.forceNames || await CombinationsHandler.validateCombinationsList()) {
         await generateNames(result);
     } else {
-        console.log('[!] Insufficient words found, exiting now...');
+        Logger.prettyLog('[!] Insufficient words found, exiting now...');
         exit(0);
     }
 }
@@ -131,7 +131,7 @@ async function plotCluster(key: string) {
 
     key.split(',').forEach((value) => {
         if (!groupToPlot.children.has(value)) {
-            console.log('[!] Key error at \'' + value + '\'! Exiting now...');
+            Logger.prettyLog('[!] Key error at \'' + value + '\'! Exiting now...');
             exit(0);
         }
         groupToPlot = groupToPlot.children.get(value);
@@ -144,7 +144,7 @@ if (argv[2] === 'validate') {
     CombinationsHandler.validateCombinationsList()
     .then((isValid) => {
         const msg = isValid ? '[+] Combination list is valid!' : '[!] Combination list is invalid!';
-        console.log(msg);
+        Logger.prettyLog(msg);
     });
 } else if (argv[2] === 'cities') {
     generateCities();

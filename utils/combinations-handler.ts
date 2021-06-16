@@ -41,6 +41,7 @@ export class CombinationsHandler {
         list.push({
             key: prevKeys.join(','),
             total: result.pois.length,
+            approxEntries: Math.ceil(Math.sqrt(result.clusteredPois[0].length / this.namesList.length)),
             biggestCluster: result.clusteredPois[0].length,     //the clusteredPois are always sorted by the cluster length (descending)
             clusters: result.clusteredPois.length,
             adjectives: [],
@@ -51,17 +52,34 @@ export class CombinationsHandler {
         return list;
     }
 
+    /**
+     * Returns an obj of the given list of ICombinations, where the key of  
+     * each combination is also its key in the obj 
+     * @param list The list of `ICombination` objects
+     * @returns The obj with the combinations as values
+     */
     private static listToObj(list: ICombination[]): { [key: string]: ICombination } {
         const obj = {};
         list.forEach((e) => obj[e.key] = e);
         return obj;
     }
 
+    /**
+     * Returns a list of the values of the given obj 
+     * @param obj The `ICombination` object to turn into a list
+     * @returns The list with the obj values
+     */
     private static objToList(obj: { [key: string]: ICombination }): ICombination[] {
         return [...Object.values(obj)];
     }
 
+    /**
+     * Compares the already existing combinations file to the new analysis result,  
+     * updating the current if there are any changes
+     * @param result The new analysis result
+     */
     public static async updateCombinationsList(result: IAnalysisResult): Promise<void> {
+        if (!this.namesList) this.initNamesList();
         const newResult = this.listToObj(this.flattenResult(result, [], []));
         const current = this.listToObj(await this.getCombinations());
 
@@ -74,17 +92,13 @@ export class CombinationsHandler {
                 //key does not exist in current combinations
                 current[key] = newResult[key];
                 keysNew.push(key);
-            } else {
-                if (current[key].total !== newResult[key].total
-                    || current[key].clusters !== newResult[key].clusters
-                    || current[key].biggestCluster !== newResult[key].biggestCluster) {
-
-                    //update current key
-                    current[key].total = newResult[key].total;
-                    current[key].clusters = newResult[key].clusters;
-                    current[key].biggestCluster = newResult[key].biggestCluster;
-                    keysUpdated.push(key);
-                }
+            } else if (current[key].approxEntries !== newResult[key].approxEntries) {
+                //update current key
+                current[key].total = newResult[key].total;
+                current[key].approxEntries = newResult[key].approxEntries;
+                current[key].clusters = newResult[key].clusters;
+                current[key].biggestCluster = newResult[key].biggestCluster;
+                keysUpdated.push(key);
             }
 
             const index = keysUnneeded.indexOf(key);
@@ -105,23 +119,25 @@ export class CombinationsHandler {
         if (!this.namesList) this.initNamesList();
         if (!this._combinations) await this.initCombinations();
 
-        const missing: { key: string, missing: number }[] = [];
+        const missing: { key: string, totalMissing: number, entriesMissing: number }[] = [];
 
         this._combinations.forEach((entry) => {
             const adjectivesLength = !entry.adjectives.length ? 1 : entry.adjectives.length;
 
             const total = adjectivesLength * entry.descriptions.length * this.namesList.length;
-            if (total < entry.biggestCluster) missing.push({ key: entry.key, missing: entry.biggestCluster - total });
+            if (total < entry.biggestCluster) {
+                const totalMissing = entry.biggestCluster - total;
+                const entriesMissing = entry.approxEntries - Math.min(adjectivesLength, entry.descriptions.length);
+                missing.push({ key: entry.key, totalMissing: totalMissing, entriesMissing: entriesMissing });
+            }
         });
 
-        const namesCount = !!this.namesList.length ? this.namesList.length : 1;
         let counter = 0;
         missing.forEach((entry) => {
-            const approxSqrt = Math.ceil(Math.sqrt(entry.missing / namesCount));
-            counter += 2 * approxSqrt;
-            console.log(`[!] '${entry.key}': ${entry.missing} combinations missing! (${approxSqrt} * ${approxSqrt})`);
+            counter += 2 * entry.entriesMissing;
+            Logger.prettyLog(`[!] '${entry.key}': ${entry.totalMissing} combinations missing! (${entry.entriesMissing} * ${entry.entriesMissing})`);
         });
-        console.log(`[i] ${counter} combinations missing in total!`);
+        Logger.prettyLog(`[i] ${counter} combinations missing in total!`);
 
         return !missing.length;
     }
@@ -144,7 +160,7 @@ export class CombinationsHandler {
         if (fs.existsSync(this.outputFilename)) {
             this._combinations = (await import(this.moduleFilename)).combinations;
         } else {
-            console.log('[!] Failed to load \'' + this.outputFilename + '\'! Exiting now...');
+            Logger.prettyLog('[!] Failed to load \'' + this.outputFilename + '\'! Exiting now...');
             exit(0);
         }
     }

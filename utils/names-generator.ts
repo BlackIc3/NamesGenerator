@@ -19,11 +19,11 @@ export class NamesGenerator {
      */
     constructor(result: IAnalysisResult, combinations: ICombination[]) {
         if (!CONFIG.generatedNamesFilename) {
-            console.log('[!] Please specify the generatedNames-Key in the config!');
+            Logger.prettyLog('[!] Please specify the generatedNames-Key in the config!');
             exit(0);
         }
         if (!fs.existsSync(CONFIG.namesList)) {
-            console.log(`[!] Could not load nameslist '${CONFIG.namesList}', exiting now...`);
+            Logger.prettyLog(`[!] Could not load nameslist '${CONFIG.namesList}', exiting now...`);
             exit(0);
         }
 

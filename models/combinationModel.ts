@@ -8,6 +8,10 @@ export interface ICombination {
      */
     total: number;
     /**
+     * The approximal amount of adjectives/descriptions needed in order to name all POIs with this key
+     */
+    approxEntries: number;
+    /**
      * The amount of pois in the biggest cluster 
      */
     biggestCluster: number;

@@ -75,7 +75,7 @@ export class ClusterGenerator {
 
             const runner = spawn('utils\\clusterHelper\\' + CONFIG.clusterHelperBinary, args);
             runner.stdout.on("data", data => {
-                //console.log(data.toString());
+                //Logger.prettyLog(data.toString());
             });
 
             runner.stderr.on("data", data => {
@@ -91,7 +91,7 @@ export class ClusterGenerator {
             runner.on("close", code => {
                 this.runningThreads--;
                 if (code !== 0) {
-                    console.log('Arguments: ' + args.join(' '));
+                    Logger.prettyLog('Arguments: ' + args.join(' '));
                     reject('Bad Exit Code: ' + code);
                 } else {
                     const mappedClusters: Poi[][] = this.mapClusters(outFile, pois); 

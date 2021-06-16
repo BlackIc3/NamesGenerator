@@ -8,8 +8,18 @@ import { IShallowAnalysisResult } from '../models/shallowAnalysisResultModel';
 
 
 export class Logger {
-    private static longestMsg = 0; //the length of the longest message so far
-    private static layer = 0; //the depth of the curser
+    private static longestMsg = 0;  //the length of the longest message so far
+    private static layer = 0;       //the depth of the curser
+
+    private static workingAnimation = ['-', '\\', '|', '/'];    //the animation to display while working 
+    private static progressTimer: NodeJS.Timeout;               //the id of the progress timer
+    private static colors = {                                   //an objec of color escape codes
+        white: "\x1b[37m",
+        blue: "\x1b[34m",
+        green: "\x1b[32m",
+        red: "\x1b[31m",
+        yellow: "\x1b[33m"
+    }
 
     /**
      * Move the cursor the the right
@@ -61,7 +71,7 @@ export class Logger {
      */
     public static printProgress(message: string, current = 0, max = 0, times: number[] = []) {
         if (message.length > 100) message = message.substring(0, 96);
-        let outputString = '[*] ' + message + '...';
+        let outputString = message + '...';
 
         if (max != 0) {
             const maxBars = 20;
@@ -76,7 +86,12 @@ export class Logger {
             outputString += "\t[" + Logger.getTimeString(remaining) + "] " + (avg / 1000).toFixed(3) + "s/Entry";
         }
 
-        this.write(outputString.padEnd(this.longestMsg, ' '));
+        if (!!this.progressTimer) clearInterval(this.progressTimer)
+        const startTime = Date.now();
+        this.progressTimer = setInterval(() => {
+            const index = Math.floor((Date.now() - startTime) / 1000) % this.workingAnimation.length
+            this.write(('[' + this.workingAnimation[index] + '] ' + outputString).padEnd(this.longestMsg, ' '));
+        }, 1000);
     }
 
     /**
@@ -84,6 +99,7 @@ export class Logger {
      * @param message the message to prompt
      */
     public static printDone(message: string) {
+        if (!!this.progressTimer) clearInterval(this.progressTimer);
         if (message.length > 100) message = message.substring(0, 96) + '...';
         this.write(message.padEnd(this.longestMsg - 1, ' ') + '\n');
     }
@@ -141,9 +157,11 @@ export class Logger {
         const lines = [header];
 
         sortedList.forEach((entry) => {
-            const approxSqrt = Math.ceil(Math.sqrt(entry.biggestCluster / namesListLength));
+            const missing = entry.approxEntries - Math.min(entry.adjectives.length, entry.descriptions.length);
+            const isInsufficient = entry.adjectives.length + entry.descriptions.length < (entry.approxEntries * 2) - 1
             lines.push('\t{');
-            lines.push(`\t\t// ${approxSqrt} * ${approxSqrt}`);
+            lines.push(`\t\t// ${entry.approxEntries} * ${entry.approxEntries}`);
+            if (isInsufficient) lines.push(`\t\t// ${missing} * ${missing} missing`);
             lines.push(Object.entries(entry).map(([key, value]) => '\t\t' + key + ': ' + this.getCorrectString(value)).join(',\n'));
             lines.push('\t},');
         });
@@ -171,27 +189,44 @@ export class Logger {
         }
     }
 
+    /**
+     * Returns a nice string-representation of an array of descriptions
+     * @param descriptions The list of descriptions to stringify
+     * @returns A printable version of the given description
+     */
     private static stringifyDescriptions(descriptions: IDescription[]) {
         const lines = descriptions
             .map((d) => '\t\t\t{adjectiveEnding: \'' + d.adjectiveEnding + '\', description: \'' + d.description + '\'}')
             .join(',\n');
-        return '[\n' + lines + '\t\t]'
+        return '[\n' + lines + '\n\t\t]'
     }
 
-    public static printCombinationsUpdates(newKeys:string[], updatedKeys:string[], unneededKeys:string[]) {
+    /**
+     * Prints a overview of the given changes
+     * @param newKeys The list of newly added keys
+     * @param updatedKeys The list of keys, where the amount of needed entries changed
+     * @param unneededKeys The list of keys, that are no longer needed
+     */
+    public static printCombinationsUpdates(newKeys: string[], updatedKeys: string[], unneededKeys: string[]) {
         if (newKeys.length) this.safePrintList(newKeys, 'new');
         if (updatedKeys.length) this.safePrintList(updatedKeys, 'updated');
         if (unneededKeys.length) this.safePrintList(unneededKeys, 'unneeded');
     }
 
-    private static safePrintList(list:string[], keyword:'new'|'updated'|'unneeded', threshold = 5) {
+    /**
+     * A helper function to print a limited amount of keys from the given list
+     * @param list the list of keys
+     * @param keyword The type of change
+     * @param threshold The limit of how many keys should be printed
+     */
+    private static safePrintList(list: string[], keyword: 'new' | 'updated' | 'unneeded', threshold = 5) {
         let out = '[i] ' + list.length + ' ' + keyword + ' keys';
         if (list.length <= threshold) {
             out += ':\n';
             out += list.map((el) => '\t- \'' + el + '\'').join('\n');
-        } else {out += '!';}
-        
-        console.log(out);
+        } else { out += '!'; }
+
+        this.prettyLog(out);
     }
 
     /**
@@ -243,7 +278,7 @@ export class Logger {
 
         if (result.pois.length) output.push('[i] Not groupable: ' + this.beautfiyNumber(result.pois.length));
 
-        console.log(output.join('\n\n'));
+        this.prettyLog(output.join('\n\n'));
         if (!!filename) {
             if (!fs.existsSync(CONFIG.outFolder + '/')) fs.mkdirSync(CONFIG.outFolder);
             fs.writeFileSync(CONFIG.outFolder + '/' + filename, output.join('\n\n'));
@@ -283,6 +318,42 @@ export class Logger {
      */
     private static write(text: string) {
         if (text.length > this.longestMsg) this.longestMsg = text.length + 1;
-        process.stdout.write('\r' + ' '.repeat(this.layer * 4) + text);
+        process.stdout.write('\r' + ' '.repeat(this.layer * 4) + this.highlightText(text));
     }
+
+    /**
+     * Returns a color code for the given text, depending on the indicator at the start of the text  
+     * @param text The text to get a color for
+     * @returns The color escape code
+     */
+    private static getIndicatorHighlight(text: string) {
+        switch(text.trim().substring(0, 3)) {
+            case '[i]': return this.colors.blue;
+            case '[+]': return this.colors.green;
+            case '[!]': return this.colors.red;
+            default: return this.colors.yellow;
+        }
+    }
+
+    /**
+     * Returns a colored version of the given text by detecting specific characters
+     * @param text The text to highlight
+     * @returns The given text with color escape codes inserted
+     */
+    private static highlightText(text: string) {
+        const numbersHighlighted = text.replace(/(?:\d(?: \d)?)+/gm, this.colors.yellow + "$&" + this.colors.white);
+        
+        if (!!text.trim().match(/^\[.+\]/)) {
+            return numbersHighlighted.replace(/^\[.+\]/, this.getIndicatorHighlight(text) + "$&" + this.colors.white);
+        }
+        
+        return numbersHighlighted;
+    }
+
+    /**
+     * Highlights the given text and prints it to the console  
+     * `Should always be used instead of console.log()!`
+     * @param text The text to print
+     */
+    public static prettyLog(text: string) { console.log(this.highlightText(text)) };
 }
