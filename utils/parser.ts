@@ -53,7 +53,7 @@ export class Parser {
 
             xml.on('end', () => {
                 clearInterval(interval);
-                Logger.printDone(`[+] Loaded ${Logger.beautfiyNumber(total)} Pois with ${Logger.beautfiyNumber(handler.nameless.size)} nameless Pois in ${Logger.getTimeString(time)}!`);
+                Logger.printDone(`[+] Loaded ${Logger.beautifyNumber(total)} Pois with ${Logger.beautifyNumber(handler.nameless.size)} nameless Pois in ${Logger.getTimeString(time)}!`);
                 this.saveToCsv(handler).then(() => resolve(handler));
             });
         });
@@ -80,7 +80,7 @@ export class Parser {
             });
 
             readline.on('close', () => {
-                Logger.printDone(`[+] Loaded ${Logger.beautfiyNumber(handler.size)} Pois!`);
+                Logger.printDone(`[+] Loaded ${Logger.beautifyNumber(handler.size)} Pois!`);
                 resolve(handler);
             });
         });

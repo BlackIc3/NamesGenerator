@@ -29,7 +29,7 @@ export class Analyst {
         await ClusterGenerator.isFinished();
 
         const time = new Date().getTime() - start;
-        Logger.printDone('[+] Analyzed ' + Logger.beautfiyNumber(handler.size) + ' POIs in ' + Logger.getTimeString(Math.round(time / 1000)));
+        Logger.printDone('[+] Analyzed ' + Logger.beautifyNumber(handler.size) + ' POIs in ' + Logger.getTimeString(Math.round(time / 1000)));
 
         return result;
     }

@@ -136,7 +136,7 @@ async function plotCluster(key: string) {
         }
         groupToPlot = groupToPlot.children.get(value);
     });
-    Plotter.plotCluster(groupToPlot.clusteredPois, Logger.beautfiyNumber(groupToPlot.pois.length) + ': ' + key);
+    Plotter.plotCluster(groupToPlot.clusteredPois, Logger.beautifyNumber(groupToPlot.pois.length) + ': ' + key);
 }
 
 

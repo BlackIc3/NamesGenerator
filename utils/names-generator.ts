@@ -56,7 +56,7 @@ export class NamesGenerator {
             Logger.printProgress('Generating names', count, this.result.total);
         });
 
-        stream.end(() => Logger.printDone('[+] Wrote ' + Logger.beautfiyNumber(count) + ' names to \'' + CONFIG.generatedNamesFilename + '\'!'));
+        stream.end(() => Logger.printDone('[+] Wrote ' + Logger.beautifyNumber(count) + ' names to \'' + CONFIG.generatedNamesFilename + '\'!'));
     }
 
     /**

@@ -23,10 +23,10 @@ export class CitiyUtils {
         pois.forEach((p, index) => {
             const city = this.findClosestCity(p, cities);
             p.city = city.id;
-            Logger.printProgress("Mapping " + Logger.beautfiyNumber(cities.length) + " cities to " + Logger.beautfiyNumber(pois.length) + " Pois", index + 1, pois.length);
+            Logger.printProgress("Mapping " + Logger.beautifyNumber(cities.length) + " cities to " + Logger.beautifyNumber(pois.length) + " Pois", index + 1, pois.length);
         });
 
-        Logger.printDone("[+] Succesfully mapped " + Logger.beautfiyNumber(cities.length) + " cities to " + Logger.beautfiyNumber(pois.length) + " Pois!");
+        Logger.printDone("[+] Succesfully mapped " + Logger.beautifyNumber(cities.length) + " cities to " + Logger.beautifyNumber(pois.length) + " Pois!");
 
         return [pois, cities];
     }

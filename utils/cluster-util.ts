@@ -208,7 +208,7 @@ export class ClusterGenerator {
 
         let clusterID = 0;
         for (const p of pois) {
-            Logger.printProgress('Clustering ' + Logger.beautfiyNumber(pois.length) + ' pois', progress, pois.length);
+            Logger.printProgress('Clustering ' + Logger.beautifyNumber(pois.length) + ' pois', progress, pois.length);
 
             if (p.clusterLabel > -1) continue;                              //skip p if already assigned
             const neighbors_p = this.getNeighbors(p, pois, epsilon);        //get neighbors of p
@@ -229,7 +229,7 @@ export class ClusterGenerator {
                 q.clusterLabel = clusterID;                                 //if the point q is not already in a cluster, add it to the cluster around p
 
                 progress++;
-                Logger.printProgress('Clustering ' + Logger.beautfiyNumber(pois.length) + ' pois', progress, pois.length);
+                Logger.printProgress('Clustering ' + Logger.beautifyNumber(pois.length) + ' pois', progress, pois.length);
 
                 const neighbors_q = this.getNeighbors(q, pois, epsilon);    //find neighbors of q
                 if (neighbors_q.length >= minPoints) {

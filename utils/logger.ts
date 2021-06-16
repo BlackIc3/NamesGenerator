@@ -49,7 +49,7 @@ export class Logger {
      * @param input a (presumable big) number
      * @returns the given number as a string
      */
-    public static beautfiyNumber(input: number): string {
+    public static beautifyNumber(input: number): string {
         const arr = input.toString().split('');
         let ret = '';
         arr.reverse().forEach((digit, index) => {
@@ -271,12 +271,12 @@ export class Logger {
         const output = [];
 
         result.children.forEach((child, key) => {
-            const header = '[i] ' + key + ' [' + Logger.beautfiyNumber(child.total) + ']' + '\n';
+            const header = '[i] ' + key + ' [' + Logger.beautifyNumber(child.total) + ']' + '\n';
             const result = this.flattenAnalysisResult(child, key);
             output.push(header + result);
         });
 
-        if (result.pois.length) output.push('[i] Not groupable: ' + this.beautfiyNumber(result.pois.length));
+        if (result.pois.length) output.push('[i] Not groupable: ' + this.beautifyNumber(result.pois.length));
 
         this.prettyLog(output.join('\n\n'));
         if (!!filename) {
@@ -302,12 +302,12 @@ export class Logger {
         }
 
         if (!result.children.size) {
-            output += ': ' + this.beautfiyNumber(result.pois.length);
+            output += ': ' + this.beautifyNumber(result.pois.length);
             return output;
         }
 
         const lines = [];
-        if (result.pois.length) lines.push(`${output.replace(/ && $/, '')}: ${this.beautfiyNumber(result.pois.length)}`);
+        if (result.pois.length) lines.push(`${output.replace(/ && $/, '')}: ${this.beautifyNumber(result.pois.length)}`);
         result.children.forEach((child, currentKey) => lines.push(this.flattenAnalysisResult(child, currentKey, !isKey, output)));
         return lines.join('\n');
     }
